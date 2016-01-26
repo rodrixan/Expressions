@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Configuration file of Log4j2. Setted to info level -->
+<!DOCTYPE xml>
+<Configuration status="info" strict="true" name="TFG-CAS">
+	<Appenders>
+		<Appender type="Console" name="STDOUT">
+			<Layout type="PatternLayout"
+				pattern="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+		</Appender>
+	</Appenders>
+	<Loggers>
+		<!-- Set to debug to see the log messages -->
+		<Root level="info">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+
+	</Loggers>
+</Configuration>

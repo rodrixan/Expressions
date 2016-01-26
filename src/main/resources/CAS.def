@@ -1,0 +1,22 @@
+#CAS parameters, types, and auxiliary functions
+
+> elements
+- exp : number, variable, function
+- function : id_func (list<exp>)
+- list<exp>
+
+> functions
+
+list permute(list, i, j) - returns a list with element i in position j
+
+list concat(elem ... ) - creates a new list from the concatenation of elems
+
+list sublist(list, i, j) - returns a sublist from element i to j
+
+list detect(list, exp) - returns a list with exp as first element if detects exp as an element of the list, else return list
+
+list isFormat(list, exp ...) - detects if the list matches the format given
+
+list cartessianProduct(list1, list2) - multiplies elements of two lists
+
+> basic rules
