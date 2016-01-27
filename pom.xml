@@ -3,8 +3,8 @@
   <groupId>es.uam.eps.tfg</groupId>
   <artifactId>Expressions</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Expression CAS</name>
-  <description>Test Expression CAS</description>
+  <name>CAS Expressions</name>
+  <description>Design solution for CAS Expressions</description>
   <dependencyManagement>
 		<dependencies>
 			<dependency>
