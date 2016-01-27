@@ -1,7 +1,8 @@
 package es.uam.eps.tfg.expressions.types;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,17 +25,21 @@ public class NAryTreeNodeTest {
 
 	@Test
 	public void shouldAddChildrenAtSpecifiedPosition() {
-		node.addChild(0, createSampleChildren("child2"));
-		node.addChild(1, createSampleChildren("child1"));
-		assertEquals(0, node.indexOfChild(createSampleChildren("child2")));
-		assertEquals(1, node.indexOfChild(createSampleChildren("child1")));
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(0, child2);
+		node.addChild(1, child1);
+		assertEquals(0, node.indexOfChild(child2));
+		assertEquals(1, node.indexOfChild(child1));
 
 	}
 
 	@Test
 	public void shouldRemoveChildren() {
-		node.addChild(createSampleChildren("child1"));
-		node.addChild(createSampleChildren("child2"));
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(child1);
+		node.addChild(child2);
 
 		assertEquals(2, node.getChildren().size());
 		node.removeChildren();
@@ -43,43 +48,83 @@ public class NAryTreeNodeTest {
 
 	@Test
 	public void testRemoveChildrenInt() {
-		node.addChild(createSampleChildren("child1"));
-		node.addChild(createSampleChildren("child2"));
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(child1);
+		node.addChild(child2);
 
 		assertEquals(2, node.getChildren().size());
 		node.removeChildren(0);
 		assertEquals(1, node.getChildren().size());
-		assertEquals(createSampleChildren("child2"), node.getChildAt(0));
+		assertEquals(child2, node.getChildAt(0));
 	}
 
 	@Test
 	public void shouldGetChildAtIndex() {
-		fail("Not yet implemented");
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(child1);
+		node.addChild(child2);
+
+		assertEquals(child1, node.getChildAt(0));
+		assertEquals(child2, node.getChildAt(1));
 	}
 
 	@Test
 	public void shouldReturnIndexOfChild() {
-		fail("Not yet implemented");
+		final NAryTreeNode<String> child = createSampleChildren("child1");
+		node.addChild(child);
+
+		assertEquals(0, node.indexOfChild(child));
 	}
 
 	@Test
 	public void shouldCheckIfNodeContainsChild() {
-		fail("Not yet implemented");
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(child1);
+		node.addChild(child2);
+
+		assertTrue(node.contains(child1));
+		assertTrue(node.contains(child2));
 	}
 
 	@Test
 	public void shouldFailIfNodeDoesNotContainChild() {
-		fail("Not yet implemented");
+		final NAryTreeNode<String> child1 = createSampleChildren("child1");
+		final NAryTreeNode<String> child2 = createSampleChildren("child2");
+		node.addChild(child1);
+
+		assertFalse(node.contains(child2));
+	}
+
+	@Test
+	public void shouldCheckifNodeIsNotLeaf() {
+		final NAryTreeNode<String> child = createSampleChildren("child");
+		node.addChild(child);
+		assertFalse(node.isLeaf());
 	}
 
 	@Test
 	public void shouldCheckifNodeIsLeaf() {
-		fail("Not yet implemented");
+
+		assertTrue(node.isLeaf());
 	}
 
 	@Test
 	public void shouldCheckIfNodeHasParent() {
-		fail("Not yet implemented");
+		final NAryTreeNode<String> child = createSampleChildren("child");
+		node.addChild(child);
+		final NAryTreeNode<String> childAdded = node.getChildAt(0);
+		assertTrue(childAdded.hasParent());
+		assertEquals(node, childAdded.getParent());
+	}
+
+	@Test
+	public void shouldCheckIfNodeHasNoParent() {
+
+		assertFalse(node.hasParent());
+
 	}
 
 	private NAryTreeNode<String> createSampleChildren(String data) {

@@ -60,7 +60,7 @@ public class NAryTreeNode<T> {
 	}
 
 	public boolean hasParent() {
-		return parent == null;
+		return parent != null;
 	}
 
 	public T getData() {

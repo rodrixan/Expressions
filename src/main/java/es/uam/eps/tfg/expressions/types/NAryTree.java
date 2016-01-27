@@ -1,5 +1,13 @@
 package es.uam.eps.tfg.expressions.types;
 
+/**
+ * N-Ary Tree structure
+ *
+ * @author Rodrigo de Blas
+ *
+ * @param <T>
+ *            data to store in nodes
+ */
 public class NAryTree<T> {
 	private NAryTreeNode<T> root;
 
