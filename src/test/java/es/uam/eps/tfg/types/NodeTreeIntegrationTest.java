@@ -12,31 +12,31 @@ import org.junit.Test;
 
 import com.googlecode.jctree.NodeNotFoundException;
 
+import es.uam.eps.expressions.types.ExpressionNode;
 import es.uam.eps.expressions.types.ExpressionTree;
-import es.uam.eps.expressions.types.Node;
 
 public class NodeTreeIntegrationTest {
-	ExpressionTree<Node<String>> tree;
+	ExpressionTree<ExpressionNode<String>> tree;
 
 	@Before
 	public void buildTree() {
 		tree = new ExpressionTree<>();
 
-		final Node<String> root = new Node<>("+");
-		final Node<String> node1 = new Node<>(1, new int[] { 1 }, "*");
-		final Node<String> node2 = new Node<>(1, new int[] { 2 }, "*");
-		final Node<String> node3 = new Node<>(1, new int[] { 3 }, "h");
+		final ExpressionNode<String> root = new ExpressionNode<>("+");
+		final ExpressionNode<String> node1 = new ExpressionNode<>(1, new int[] { 1 }, "*");
+		final ExpressionNode<String> node2 = new ExpressionNode<>(1, new int[] { 2 }, "*");
+		final ExpressionNode<String> node3 = new ExpressionNode<>(1, new int[] { 3 }, "h");
 
-		final Node<String> node11 = new Node<>(2, new int[] { 1, 1 }, "a");
-		final Node<String> node12 = new Node<>(2, new int[] { 1, 2 }, "b");
-		final Node<String> node13 = new Node<>(2, new int[] { 1, 3 }, "c");
+		final ExpressionNode<String> node11 = new ExpressionNode<>(2, new int[] { 1, 1 }, "a");
+		final ExpressionNode<String> node12 = new ExpressionNode<>(2, new int[] { 1, 2 }, "b");
+		final ExpressionNode<String> node13 = new ExpressionNode<>(2, new int[] { 1, 3 }, "c");
 
-		final Node<String> node21 = new Node<>(2, new int[] { 2, 1 }, "d");
-		final Node<String> node22 = new Node<>(2, new int[] { 2, 2 }, "+");
+		final ExpressionNode<String> node21 = new ExpressionNode<>(2, new int[] { 2, 1 }, "d");
+		final ExpressionNode<String> node22 = new ExpressionNode<>(2, new int[] { 2, 2 }, "+");
 
-		final Node<String> node221 = new Node<>(3, new int[] { 2, 2, 1 }, "e");
-		final Node<String> node222 = new Node<>(3, new int[] { 2, 2, 2 }, "f");
-		final Node<String> node223 = new Node<>(3, new int[] { 2, 2, 3 }, "g");
+		final ExpressionNode<String> node221 = new ExpressionNode<>(3, new int[] { 2, 2, 1 }, "e");
+		final ExpressionNode<String> node222 = new ExpressionNode<>(3, new int[] { 2, 2, 2 }, "f");
+		final ExpressionNode<String> node223 = new ExpressionNode<>(3, new int[] { 2, 2, 3 }, "g");
 
 		tree.add(root);
 		tree.addAll(root, Arrays.asList(node1, node2, node3));
@@ -52,24 +52,24 @@ public class NodeTreeIntegrationTest {
 
 	@Test
 	public void shouldReturnCommonAncestor() {
-		Node<String> ancestor = null;
+		ExpressionNode<String> ancestor = null;
 		try {
-			ancestor = tree.commonAncestor(new Node<>(3, new int[] { 2, 2, 3 }, "g"),
-					new Node<>(2, new int[] { 2, 1 }, "d"));
+			ancestor = tree.commonAncestor(new ExpressionNode<>(3, new int[] { 2, 2, 3 }, "g"),
+					new ExpressionNode<>(2, new int[] { 2, 1 }, "d"));
 		} catch (final NodeNotFoundException e) {
 
 			fail(e.getMessage());
 		}
 
 		assertNotNull(ancestor);
-		assertEquals(ancestor, new Node<>(1, new int[] { 2 }, "*"));
+		assertEquals(ancestor, new ExpressionNode<>(1, new int[] { 2 }, "*"));
 	}
 
 	@Test
 	public void shouldReturnInOrderExpression() {
-		final List<Node<String>> expression = tree.inOrderTraversal();
+		final List<ExpressionNode<String>> expression = tree.inOrderTraversal();
 		final StringBuilder sb = new StringBuilder();
-		for (final Node<String> n : expression) {
+		for (final ExpressionNode<String> n : expression) {
 			sb.append(n.getData() + " ");
 		}
 		assertEquals("a * b * c + d * e + f + g + h", sb.toString().trim());
