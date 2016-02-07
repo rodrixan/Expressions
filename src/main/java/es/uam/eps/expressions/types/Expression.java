@@ -1,13 +1,22 @@
 package es.uam.eps.expressions.types;
 
-public class Expression {
-	private ExpressionTree<ExpressionNode<String>> tree;
+public class Expression implements Element {
 
-	public Expression() {
-		tree = new ExpressionTree<>();
+	private String txt;
+
+	public Expression(String txt) {
+		this.txt = txt;
 	}
 
-	public ExpressionTree<ExpressionNode<String>> asExpressionTree() {
-		return tree;
+	@Override
+	public String toString() {
+
+		return txt;
 	}
+
+	@Override
+	public int getValue() {
+		return Element.VALUE_NOT_AVAILABLE;
+	}
+
 }
