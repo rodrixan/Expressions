@@ -4,28 +4,35 @@ import es.uam.eps.expressions.exceptions.IllegalPropertyException;
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.Element;
 import es.uam.eps.expressions.types.Expression;
-import es.uam.eps.expressions.types.SUMList;
+import es.uam.eps.expressions.types.MULList;
 
+/**
+ * Main class for testing and viewing how to use the classes and how they work
+ *
+ * @author Rodrigo de Blas
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {
-		final SUMList<Element> sumList = new SUMList<>();
+		/** Same for all sublist types: SUM, MUL,... */
+		final MULList<Element> mulList = new MULList<>();
 
-		sumList.add(new Expression("a"));
-		sumList.add(new Expression("b"));
-		sumList.add(new Expression("c"));
-		sumList.add(new Expression("d"));
-		sumList.add(new Expression("e"));
+		mulList.add(new Expression("a"));
+		mulList.add(new Expression("b"));
+		mulList.add(new Expression("c"));
+		mulList.add(new Expression("d"));
+		mulList.add(new Expression("e"));
 
-		System.out.println(sumList.toString());
+		System.out.println(mulList.toString());
 
-		SUMList<Element> associatedSUMList = null;
-		SUMList<Element> conmutedSUMList = null;
+		MULList<Element> associatedSUMList = null;
+		MULList<Element> conmutedSUMList = null;
 		try {
-			associatedSUMList = (SUMList<Element>) Properties.associate(sumList, 2, 3);
-			System.out.println("Lista asociada: " + associatedSUMList);
-			conmutedSUMList = (SUMList<Element>) Properties.conmute(associatedSUMList, 2, 1);
-			System.out.println("Lista conmutada: " + conmutedSUMList);
+			associatedSUMList = (MULList<Element>) Properties.associate(mulList, 2, 3);
+			System.out.println("Associated list: " + associatedSUMList);
+			conmutedSUMList = (MULList<Element>) Properties.conmute(associatedSUMList, 2, 0);
+			System.out.println("Conmuted list: " + conmutedSUMList);
 
 		} catch (final IllegalPropertyException e) {
 			System.err.println("ERROR: " + e.getMessage());

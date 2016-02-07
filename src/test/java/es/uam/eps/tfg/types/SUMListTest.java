@@ -26,4 +26,19 @@ public class SUMListTest {
 		assertEquals("+[a, b, c, d, e]", sumList.toString());
 	}
 
+	@Test
+	public void simpleSymbolicExpressionTest() {
+		assertEquals("a + b + c + d + e", sumList.symbolicExpression());
+	}
+
+	@Test
+	public void complexSymbolicExpressionTest() {
+		final SUMList<Element> innerList = new SUMList<Element>();
+		innerList.add(new Expression("f"));
+		innerList.add(new Expression("g"));
+
+		sumList.add(innerList);
+		assertEquals("a + b + c + d + e + (f + g)", sumList.symbolicExpression());
+	}
+
 }
