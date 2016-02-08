@@ -1,10 +1,9 @@
 package es.uam.eps.expressions.main;
 
-import es.uam.eps.expressions.exceptions.IllegalPropertyException;
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.Element;
-import es.uam.eps.expressions.types.Expression;
 import es.uam.eps.expressions.types.MULList;
+import es.uam.eps.expressions.types.SingleExpression;
 
 /**
  * Main class for testing and viewing how to use the classes and how they work
@@ -18,23 +17,23 @@ public class Main {
 		/** Same for all sublist types: SUM, MUL,... */
 		final MULList<Element> mulList = new MULList<>();
 
-		mulList.add(new Expression("a"));
-		mulList.add(new Expression("b"));
-		mulList.add(new Expression("c"));
-		mulList.add(new Expression("d"));
-		mulList.add(new Expression("e"));
+		mulList.add(new SingleExpression("a"));
+		mulList.add(new SingleExpression("b"));
+		mulList.add(new SingleExpression("c"));
+		mulList.add(new SingleExpression("d"));
+		mulList.add(new SingleExpression("e"));
 
-		System.out.println(mulList.toString());
+		System.out.println("Original list: " + mulList.toString());
 
-		MULList<Element> associatedSUMList = null;
-		MULList<Element> conmutedSUMList = null;
 		try {
-			associatedSUMList = (MULList<Element>) Properties.associate(mulList, 2, 3);
-			System.out.println("Associated list: " + associatedSUMList);
-			conmutedSUMList = (MULList<Element>) Properties.conmute(associatedSUMList, 2, 0);
-			System.out.println("Conmuted list: " + conmutedSUMList);
+			final MULList<Element> associatedList = (MULList<Element>) Properties.associate(mulList, 2, 3);
+			System.out.println("Associated list: " + associatedList);
+			final MULList<Element> conmutedList = (MULList<Element>) Properties.conmute(associatedList, 2, 0);
+			System.out.println("Conmuted list: " + conmutedList);
+			final MULList<Element> disassociatedList = (MULList<Element>) Properties.disassociate(conmutedList, 0);
+			System.out.println("Disassociated list: " + disassociatedList);
 
-		} catch (final IllegalPropertyException e) {
+		} catch (final Exception e) {
 			System.err.println("ERROR: " + e.getMessage());
 			System.exit(-1);
 		}

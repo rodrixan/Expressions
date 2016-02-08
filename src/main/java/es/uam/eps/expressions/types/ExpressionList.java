@@ -34,24 +34,6 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 		return operator;
 	}
 
-	/**
-	 * @return List with the names of the properties than can be applied to the
-	 *         expression
-	 * @see es.uam.eps.expressions.properties.Properties
-	 */
-	public abstract List<String> validProperties();
-
-	/**
-	 * Decides whether or not a property can be applied to the expression
-	 *
-	 * @param property
-	 *            name of the property.
-	 * @return true if the property can be applied, false if not
-	 *
-	 * @see es.uam.eps.expressions.properties.Properties
-	 */
-	public abstract boolean isValidProperty(String property);
-
 	@Override
 	public String symbolicExpression() {
 		final StringBuilder sb = new StringBuilder();

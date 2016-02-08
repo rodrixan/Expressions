@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import es.uam.eps.expressions.types.Element;
-import es.uam.eps.expressions.types.Expression;
+import es.uam.eps.expressions.types.SingleExpression;
 import es.uam.eps.expressions.types.SUMList;
 
 public class SUMListTest {
@@ -14,11 +14,11 @@ public class SUMListTest {
 
 	@Before
 	public void setup() {
-		sumList.add(new Expression("a"));
-		sumList.add(new Expression("b"));
-		sumList.add(new Expression("c"));
-		sumList.add(new Expression("d"));
-		sumList.add(new Expression("e"));
+		sumList.add(new SingleExpression("a"));
+		sumList.add(new SingleExpression("b"));
+		sumList.add(new SingleExpression("c"));
+		sumList.add(new SingleExpression("d"));
+		sumList.add(new SingleExpression("e"));
 	}
 
 	@Test
@@ -34,8 +34,8 @@ public class SUMListTest {
 	@Test
 	public void complexSymbolicExpressionTest() {
 		final SUMList<Element> innerList = new SUMList<Element>();
-		innerList.add(new Expression("f"));
-		innerList.add(new Expression("g"));
+		innerList.add(new SingleExpression("f"));
+		innerList.add(new SingleExpression("g"));
 
 		sumList.add(innerList);
 		assertEquals("a + b + c + d + e + (f + g)", sumList.symbolicExpression());

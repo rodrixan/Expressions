@@ -1,16 +1,18 @@
 package es.uam.eps.expressions.types;
 
+import java.util.List;
+
 /**
  * Main Class for an expression: it can be a number, variable or a list
  *
  * @author Rodrigo de Blas
  *
  */
-public class Expression implements Element {
+public class SingleExpression implements Element {
 
 	private String txt;
 
-	public Expression(String txt) {
+	public SingleExpression(String txt) {
 		this.txt = txt;
 	}
 
@@ -28,6 +30,16 @@ public class Expression implements Element {
 	@Override
 	public String symbolicExpression() {
 		return txt;
+	}
+
+	@Override
+	public boolean isValidProperty(String propName) {
+		return false;
+	}
+
+	@Override
+	public List<String> validProperties() {
+		return null;
 	}
 
 }
