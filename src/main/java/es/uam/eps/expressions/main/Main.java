@@ -22,7 +22,6 @@ public class Main {
 		mulList.add(new SingleExpression("c"));
 		mulList.add(new SingleExpression("d"));
 		mulList.add(new SingleExpression("e"));
-		//hola
 
 		System.out.println("Original list: " + mulList.toString());
 
