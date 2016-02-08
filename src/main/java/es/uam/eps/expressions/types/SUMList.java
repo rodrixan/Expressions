@@ -19,6 +19,7 @@ public class SUMList<E extends Element> extends ExpressionList<Element> {
 		validProperties = new ArrayList<>();
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
+		validProperties.add(Properties.COMMON_FACTOR);
 	}
 
 	public SUMList() {

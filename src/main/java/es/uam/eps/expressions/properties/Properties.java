@@ -18,6 +18,7 @@ public class Properties {
 	public static final String ASSOCIATIVE = "associative";
 	public static final String CONMUTATIVE = "conmutative";
 	public static final String DISTRIBUTIVE = "distributive";
+	public static final String COMMON_FACTOR = "common factor";
 
 	/** Error messages */
 	private static final String PROP_ERROR = "Property \"*\" can't be applied to expression: \"*\"";
@@ -26,7 +27,7 @@ public class Properties {
 
 	/**
 	 * Associates an arbitrary number of elements of an expression
-	 * (i.e. a+b+c = (a+b)+c))
+	 * (f.e. a+b+c = (a+b)+c))
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -61,7 +62,7 @@ public class Properties {
 	/**
 	 * Disassociates an expression of the same type in an expression. Item must
 	 * be same type that parent expression. If not, precedence can be lost
-	 * (i.e. a+(b+c)+d = a+b+c+d)
+	 * (f.e. a+(b+c)+d = a+b+c+d)
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -97,7 +98,7 @@ public class Properties {
 
 	/**
 	 * Conmutes an element from one position to another one
-	 * (i.e. a+b+c = b+a+c)
+	 * (f.e. a+b+c = b+a+c)
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -124,40 +125,64 @@ public class Properties {
 		return ret;
 	}
 
-	// TODO revisar!
-	public static ExpressionList<Element> distribute(ExpressionList<Element> exp, int chosenIndex, int distributeIndex)
+	/**
+	 * Distributes an element with one subexpression of main expression
+	 * (f.e. a*(b+c)= (a*b)+(a*c)
+	 *
+	 * @param exp
+	 *            main expression. Must contains the element and the
+	 *            subexpression
+	 * @param elementIndex
+	 *            index of the element to distribute
+	 * @param innerExpIndex
+	 *            index of the subexpression to be distributed
+	 * @return distributed expression. Can be the same type of exp if there are
+	 *         more than 2 elements, or a expression of the subexpression type
+	 *         if there are only 2 elements
+	 * @throws IllegalPropertyException
+	 *             if the expression doesn't support the property (can't be
+	 *             applied)
+	 */
+	public static ExpressionList<Element> distribute(ExpressionList<Element> exp, int elementIndex, int innerExpIndex)
 			throws IllegalPropertyException {
 		checkValidOperation(exp, DISTRIBUTIVE);
-		checkMULList(exp);
-		checkSUMList(exp.get(chosenIndex));
+		checkValidOperation(exp.get(innerExpIndex), COMMON_FACTOR);
+		checkExpressionList(exp.get(innerExpIndex));
 
-		final SUMList<?> sumList = (SUMList<?>) exp.get(chosenIndex);
+		final ExpressionList<?> innerOpList = (ExpressionList<?>) exp.get(innerExpIndex);
 
-		final Element elementToDistribute = exp.get(distributeIndex);
+		final ExpressionList<Element> mainOpList = getSameTypeList(exp.getOperator());
 
-		final SUMList<Element> distributedList = new SUMList<>();
-		for (final Element e : sumList) {
-			final MULList<Element> distributedItem = new MULList<>();
-			distributedItem.add(elementToDistribute);
-			distributedItem.add(e);
-			distributedList.add(distributedItem);
-		}
+		final Element elementToDistribute = exp.get(elementIndex);
 
-		if (exp.size() > 2) {
-			final ExpressionList<Element> returnList = new MULList<>();
-			for (int i = 0; i < exp.size(); i++) {
-				if (i != distributeIndex && i < chosenIndex) {
-					returnList.add(exp.get(i));
-				} else if (i >= chosenIndex) {
+		final ExpressionList<Element> distributedList = distribute(elementToDistribute, innerOpList, exp.getOperator());
 
-				}
-			}
-			return returnList;
-		} else {
+		// If there is only 2 elements in the expression, distribute one against
+		// another
+		if (exp.size() == 2) {
 			return distributedList;
-
 		}
 
+		mainOpList.addAll(exp);
+		mainOpList.add(innerExpIndex, distributedList);
+		mainOpList.remove(innerOpList);
+		mainOpList.remove(elementToDistribute);
+
+		return mainOpList;
+
+	}
+
+	private static ExpressionList<Element> distribute(Element element, ExpressionList<?> list, Operator op) {
+		final ExpressionList<Element> mainOpList = getSameTypeList(list.getOperator());
+
+		for (final Element e : list) {
+			final ExpressionList<Element> item = getSameTypeList(op);
+			item.add(element);
+			item.add(e);
+			mainOpList.add(item);
+		}
+
+		return mainOpList;
 	}
 
 	/**
@@ -166,27 +191,13 @@ public class Properties {
 	 * @param element
 	 *            expression to check
 	 */
-	private static void checkMULList(Element element) {
+	private static void checkExpressionList(Element element) {
 		try {
-			checkElementType(element, MULList.class);
+			checkElementType(element, ExpressionList.class);
 		} catch (final IllegalArgumentException e) {
-			throw new IllegalArgumentException(createArgErrorMsg(DISTRIBUTIVE, MULList.class.getName()));
+			throw e;
 		}
 
-	}
-
-	/**
-	 * Checks if the element given is a SUMList instance
-	 *
-	 * @param element
-	 *            expression to check
-	 */
-	private static void checkSUMList(Element element) {
-		try {
-			checkElementType(element, SUMList.class);
-		} catch (final IllegalArgumentException e) {
-			throw new IllegalArgumentException(createArgErrorMsg(DISTRIBUTIVE, SUMList.class.getName()));
-		}
 	}
 
 	/**
@@ -306,7 +317,7 @@ public class Properties {
 	 *            received type
 	 * @return message with the given attributes
 	 */
-	private static String createTypeErrorMsg(String expected, String received) {
+	private static String createTypeErrorMsg(String received, String expected) {
 		return TYPE_ERROR.replaceFirst("\\*", received).replaceFirst("\\*", expected);
 	}
 }

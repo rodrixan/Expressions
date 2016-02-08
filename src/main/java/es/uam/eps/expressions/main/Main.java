@@ -2,7 +2,9 @@ package es.uam.eps.expressions.main;
 
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.Element;
+import es.uam.eps.expressions.types.ExpressionList;
 import es.uam.eps.expressions.types.MULList;
+import es.uam.eps.expressions.types.SUMList;
 import es.uam.eps.expressions.types.SingleExpression;
 
 /**
@@ -15,8 +17,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		/** Same for all sublist types: SUM, MUL,... */
-		final MULList<Element> mulList = new MULList<>();
+		MULList<Element> mulList = new MULList<>();
 
+		// simple expressions
 		mulList.add(new SingleExpression("a"));
 		mulList.add(new SingleExpression("b"));
 		mulList.add(new SingleExpression("c"));
@@ -33,6 +36,31 @@ public class Main {
 			final MULList<Element> disassociatedList = (MULList<Element>) Properties.disassociate(conmutedList, 0);
 			System.out.println("Disassociated list: " + disassociatedList);
 
+		} catch (final Exception e) {
+			System.err.println("ERROR: " + e.getMessage());
+			System.exit(-1);
+		}
+		// TODO CHECK THIS!!!!!!
+		System.out.println(mulList.validProperties());
+		// combined expressions
+		mulList = new MULList<Element>();
+		System.out.println(mulList.validProperties());
+		mulList.add(new SingleExpression("a"));
+		mulList.add(new SingleExpression("b"));
+		mulList.add(new SingleExpression("c"));
+
+		final SUMList<Element> sumList = new SUMList<>();
+		sumList.add(new SingleExpression("d"));
+		sumList.add(new SingleExpression("e"));
+
+		mulList.add(sumList);
+		mulList.add(new SingleExpression("f"));
+
+		System.out.println("--------------------------");
+		System.out.println("Original list: " + mulList.toString());
+		try {
+			final ExpressionList<Element> distributedList = Properties.distribute(mulList, 1, 3);
+			System.out.println("Distributed list: " + distributedList.toString());
 		} catch (final Exception e) {
 			System.err.println("ERROR: " + e.getMessage());
 			System.exit(-1);
