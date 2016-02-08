@@ -1,6 +1,5 @@
 package es.uam.eps.expressions.types;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import es.uam.eps.expressions.properties.Properties;
@@ -15,16 +14,15 @@ import es.uam.eps.expressions.properties.Properties;
  */
 public class MULList<E extends Element> extends ExpressionList<Element> {
 
-	static {
-		validProperties = new ArrayList<>();
+	public MULList() {
+		super(Operator.MUL);
+		loadProperties();
+	}
+
+	private void loadProperties() {
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
 		validProperties.add(Properties.DISTRIBUTIVE);
-	}
-
-	public MULList() {
-		super(Operator.MUL);
-
 	}
 
 	@Override
@@ -42,6 +40,13 @@ public class MULList<E extends Element> extends ExpressionList<Element> {
 	@Override
 	public int getValue() {
 		return Element.VALUE_NOT_AVAILABLE;
+	}
+
+	@Override
+	public ExpressionList<Element> subExpressionList(int fromIndex, int toIndex) {
+		final ExpressionList<Element> ret = new MULList<>();
+		ret.addAll(subList(fromIndex, toIndex));
+		return ret;
 	}
 
 }

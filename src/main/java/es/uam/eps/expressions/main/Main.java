@@ -17,7 +17,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		/** Same for all sublist types: SUM, MUL,... */
-		MULList<Element> mulList = new MULList<>();
+		final ExpressionList<Element> mulList = new MULList<>();
 
 		// simple expressions
 		mulList.add(new SingleExpression("a"));
@@ -29,11 +29,11 @@ public class Main {
 		System.out.println("Original list: " + mulList.toString());
 
 		try {
-			final MULList<Element> associatedList = (MULList<Element>) Properties.associate(mulList, 2, 3);
+			final ExpressionList<Element> associatedList = Properties.associate(mulList, 2, 3);
 			System.out.println("Associated list: " + associatedList);
-			final MULList<Element> conmutedList = (MULList<Element>) Properties.conmute(associatedList, 2, 0);
+			final ExpressionList<Element> conmutedList = Properties.conmute(associatedList, 2, 0);
 			System.out.println("Conmuted list: " + conmutedList);
-			final MULList<Element> disassociatedList = (MULList<Element>) Properties.disassociate(conmutedList, 0);
+			final ExpressionList<Element> disassociatedList = Properties.disassociate(conmutedList, 0);
 			System.out.println("Disassociated list: " + disassociatedList);
 
 		} catch (final Exception e) {
@@ -41,26 +41,34 @@ public class Main {
 			System.exit(-1);
 		}
 		// TODO CHECK THIS!!!!!!
-		System.out.println(mulList.validProperties());
-		// combined expressions
-		mulList = new MULList<Element>();
-		System.out.println(mulList.validProperties());
-		mulList.add(new SingleExpression("a"));
-		mulList.add(new SingleExpression("b"));
-		mulList.add(new SingleExpression("c"));
 
-		final SUMList<Element> sumList = new SUMList<>();
+		// combined expressions
+		final ExpressionList<Element> mulList1 = new MULList<Element>();
+
+		mulList1.add(new SingleExpression("a"));
+		mulList1.add(new SingleExpression("b"));
+		mulList1.add(new SingleExpression("c"));
+
+		final ExpressionList<Element> sumList = new SUMList<>();
+
 		sumList.add(new SingleExpression("d"));
 		sumList.add(new SingleExpression("e"));
 
-		mulList.add(sumList);
-		mulList.add(new SingleExpression("f"));
+		mulList1.add(sumList);
+		mulList1.add(new SingleExpression("f"));
 
 		System.out.println("--------------------------");
-		System.out.println("Original list: " + mulList.toString());
+		System.out.println("Original list: " + mulList1.toString());
 		try {
-			final ExpressionList<Element> distributedList = Properties.distribute(mulList, 1, 3);
+			final ExpressionList<Element> distributedList = Properties.distribute(mulList1, 1, 3);
 			System.out.println("Distributed list: " + distributedList.toString());
+
+			System.out.println("--------------------------");
+			final ExpressionList<Element> mulList2 = mulList1.subExpressionList(2, 4);
+			System.out.println("Original list: " + mulList2.toString());
+
+			final ExpressionList<Element> distributedList1 = Properties.distribute(mulList2, 0, 1);
+			System.out.println("Distributed list: " + distributedList1.toString());
 		} catch (final Exception e) {
 			System.err.println("ERROR: " + e.getMessage());
 			System.exit(-1);

@@ -39,4 +39,5 @@ public interface Element {
 	 * @see es.uam.eps.expressions.properties.Properties
 	 */
 	public List<String> validProperties();
+
 }

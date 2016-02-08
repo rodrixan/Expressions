@@ -17,11 +17,12 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 	/** Type of the list */
 	private final Operator operator;
 	/** Names of the accepted properties */
-	protected static List<String> validProperties;
+	protected final List<String> validProperties;
 
 	public ExpressionList(Operator operator) {
 		super();
 		this.operator = operator;
+		validProperties = new ArrayList<>();
 	}
 
 	@Override
@@ -52,4 +53,6 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 
 		return sb.toString();
 	}
+
+	public abstract ExpressionList<E> subExpressionList(int fromIndex, int toIndex);
 }

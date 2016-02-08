@@ -23,11 +23,11 @@ public class Properties {
 	/** Error messages */
 	private static final String PROP_ERROR = "Property \"*\" can't be applied to expression: \"*\"";
 	private static final String ARG_ERROR = "Property \"*\" can't be applied: Expected argument with type \"*\"";
-	private static final String TYPE_ERROR = "Type \"*\" doesn't match: Expected argument with type \"*\"";
+	private static final String TYPE_ERROR = "Type \"*\" doesn't match: Expected type \"*\"";
 
 	/**
-	 * Associates an arbitrary number of elements of an expression
-	 * (f.e. a+b+c = (a+b)+c))
+	 * Associates an arbitrary number of elements of an expression (f.e. a+b+c =
+	 * (a+b)+c))
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -61,8 +61,8 @@ public class Properties {
 
 	/**
 	 * Disassociates an expression of the same type in an expression. Item must
-	 * be same type that parent expression. If not, precedence can be lost
-	 * (f.e. a+(b+c)+d = a+b+c+d)
+	 * be same type that parent expression. If not, precedence can be lost (f.e.
+	 * a+(b+c)+d = a+b+c+d)
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -80,6 +80,7 @@ public class Properties {
 		checkElementType(exp.get(chosenIndex), exp.getClass());
 
 		// checked before: this item must be same class that exp
+		@SuppressWarnings("unchecked")
 		final ExpressionList<Element> chosenList = (ExpressionList<Element>) exp.get(chosenIndex);
 
 		final ExpressionList<Element> ret = getSameTypeList(exp.getOperator());
@@ -97,8 +98,7 @@ public class Properties {
 	}
 
 	/**
-	 * Conmutes an element from one position to another one
-	 * (f.e. a+b+c = b+a+c)
+	 * Conmutes an element from one position to another one (f.e. a+b+c = b+a+c)
 	 *
 	 * @param exp
 	 *            expression to which the property will be applied
@@ -126,8 +126,8 @@ public class Properties {
 	}
 
 	/**
-	 * Distributes an element with one subexpression of main expression
-	 * (f.e. a*(b+c)= (a*b)+(a*c)
+	 * Distributes an element with one subexpression of main expression (f.e.
+	 * a*(b+c)= (a*b)+(a*c)
 	 *
 	 * @param exp
 	 *            main expression. Must contains the element and the
@@ -270,7 +270,7 @@ public class Properties {
 	 *            operator of the expression
 	 * @return ExpressionList of a given type
 	 */
-	private static ExpressionList<Element> getSameTypeList(Operator op) {
+	public static ExpressionList<Element> getSameTypeList(Operator op) {
 
 		switch (op) {
 		case SUM:
