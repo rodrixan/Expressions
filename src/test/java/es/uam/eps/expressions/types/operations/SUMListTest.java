@@ -1,13 +1,16 @@
-package es.uam.eps.tfg.types;
+package es.uam.eps.expressions.types.operations;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import es.uam.eps.expressions.types.Element;
+import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.SingleExpression;
-import es.uam.eps.expressions.types.SUMList;
+import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.operations.SUMList;
 
 public class SUMListTest {
 	private SUMList<Element> sumList = new SUMList<>();
@@ -41,4 +44,21 @@ public class SUMListTest {
 		assertEquals("a + b + c + d + e + (f + g)", sumList.symbolicExpression());
 	}
 
+	@Test
+	public void shouldReturnValidProperties() {
+		assertTrue(sumList.isValidProperty(Properties.ASSOCIATIVE));
+		assertTrue(sumList.isValidProperty(Properties.CONMUTATIVE));
+		assertTrue(sumList.isValidProperty(Properties.COMMON_FACTOR));
+		assertFalse(sumList.isValidProperty(Properties.DISTRIBUTIVE));
+	}
+
+	@Test
+	public void shouldReturnPlusOperator() {
+		assertEquals("+", sumList.getOperator().toString());
+	}
+
+	@Test
+	public void shouldReturnNotAvaliableValue() {
+		assertEquals(Element.VALUE_NOT_AVAILABLE, sumList.getValue());
+	}
 }

@@ -1,4 +1,4 @@
-package es.uam.eps.expressions.types;
+package es.uam.eps.expressions.types.interfaces;
 
 /**
  * Operations accepted by the CAS

@@ -1,28 +1,31 @@
-package es.uam.eps.expressions.types;
+package es.uam.eps.expressions.types.operations;
 
 import java.util.List;
 
 import es.uam.eps.expressions.properties.Properties;
+import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.ExpressionList;
+import es.uam.eps.expressions.types.interfaces.Operator;
 
 /**
- * Implements the product operation (a*b*...)
+ * Implements the sum operation (a+b+...)
  *
  * @author Rodrigo de Blas
  *
  * @param <E>
  *            parameter of the class. Must implement Element interface
  */
-public class MULList<E extends Element> extends ExpressionList<Element> {
+public class SUMList<E extends Element> extends ExpressionList<Element> {
 
-	public MULList() {
-		super(Operator.MUL);
+	public SUMList() {
+		super(Operator.SUM);
 		loadProperties();
 	}
 
 	private void loadProperties() {
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
-		validProperties.add(Properties.DISTRIBUTIVE);
+		validProperties.add(Properties.COMMON_FACTOR);
 	}
 
 	@Override
@@ -44,9 +47,13 @@ public class MULList<E extends Element> extends ExpressionList<Element> {
 
 	@Override
 	public ExpressionList<Element> subExpressionList(int fromIndex, int toIndex) {
-		final ExpressionList<Element> ret = new MULList<>();
+		final ExpressionList<Element> ret = new SUMList<>();
 		ret.addAll(subList(fromIndex, toIndex));
 		return ret;
 	}
 
+	@Override
+	public ExpressionList<Element> getSameTypeExpressionList() {
+		return new SUMList<Element>();
+	}
 }

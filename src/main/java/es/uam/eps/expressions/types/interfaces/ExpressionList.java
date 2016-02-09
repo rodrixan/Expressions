@@ -1,4 +1,4 @@
-package es.uam.eps.expressions.types;
+package es.uam.eps.expressions.types.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @param <E>
  *            parameter of the class. Must implement Element interface
  *
- * @see es.uam.eps.expressions.types.Element
+ * @see es.uam.eps.expressions.types.interfaces.Element
  */
 public abstract class ExpressionList<E extends Element> extends ArrayList<Element> implements Element {
 	/** Type of the list */
@@ -54,5 +54,20 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 		return sb.toString();
 	}
 
+	/**
+	 * Returns a subexpression from a main one
+	 *
+	 * @param fromIndex
+	 *            starting index
+	 * @param toIndex
+	 *            ending index
+	 * @return subexpression from starting index to final one
+	 * @see ArrayList "sublist" method
+	 */
 	public abstract ExpressionList<E> subExpressionList(int fromIndex, int toIndex);
+
+	/**
+	 * @return an ExpressionList of the same type
+	 */
+	public abstract ExpressionList<E> getSameTypeExpressionList();
 }

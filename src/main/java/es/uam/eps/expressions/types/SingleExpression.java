@@ -2,6 +2,10 @@ package es.uam.eps.expressions.types;
 
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
+import es.uam.eps.expressions.types.interfaces.Element;
+
 /**
  * Main Class for an expression: it can be a number, variable or a list
  *
@@ -42,4 +46,17 @@ public class SingleExpression implements Element {
 		return null;
 	}
 
+	@Override
+
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof SingleExpression)) {
+			return false;
+		}
+		final SingleExpression other = (SingleExpression) obj;
+
+		return new EqualsBuilder().append(this.txt, other.toString()).isEquals();
+	}
 }
