@@ -34,18 +34,11 @@ public final class Properties {
 	}
 
 	/** Error messages */
-	private static final String PROP_ERROR = "Property \"*\" can't be applied to expression \"*\" in position \"*\"";
-	private static final String TYPE_ERROR = "Type \"*\" doesn't match: Expected type \"*\"";
+	private static final String PROP_ERROR = "Property \"?\" can't be applied to expression \"?\" in position \"?\"";
+	private static final String TYPE_ERROR = "Type \"?\" doesn't match: Expected type \"?\"";
 
 	private Properties() throws InstantiationException {
 		throw new InstantiationException();
-	}
-
-	/**
-	 * @return list with accepted properties
-	 */
-	public static List<String> acceptedProperties() {
-		return acceptedProperties;
 	}
 
 	/**
@@ -149,8 +142,8 @@ public final class Properties {
 	}
 
 	/**
-	 * Distributes an element with one subexpression of main expression
-	 * (f.e. a*(b+c)*d= ((a*b)+(a*c))*d
+	 * Distributes an element with one subexpression of main expression (f.e.
+	 * a*(b+c)*d= ((a*b)+(a*c))*d
 	 *
 	 * @param exp
 	 *            main expression. Must contains the element and the
@@ -196,8 +189,8 @@ public final class Properties {
 	}
 
 	/**
-	 * Distributes all elements with one subexpression
-	 * (f.e. a*(b+c)*d= ((a*b)+(a*c))*d
+	 * Distributes all elements with one subexpression (f.e. a*(b+c)*d=
+	 * ((a*b)+(a*c))*d
 	 *
 	 * @param exp
 	 *            main expression. Must contains the element and the
@@ -246,37 +239,25 @@ public final class Properties {
 	 */
 	public static ExpressionList<Element> commonFactor(ExpressionList<Element> exp, Element e, int[] positions)
 			throws IllegalPropertyException {
-		checkValidOperation(exp, COMMON_FACTOR, 0);
 
-		if (positions.length < 2) {
-			throw new IllegalPropertyException(
-					createPropErrorMsg(COMMON_FACTOR, exp.toString(), positions[0]) + ". Need at least 2 items");
-		}
+		checkValidOperation(exp, COMMON_FACTOR, 0);
+		checkPositionsSize(exp, positions.length);
 
 		final ExpressionList<Element> commonFactorExp = exp.getSameTypeExpressionList();
 		ExpressionList<Element> wrapperExp = null;
 		for (final int i : positions) {
 
-			final ExpressionList<Element> subExpList = getExpressionList(exp.get(i));
-			checkValidOperation(subExpList, DISTRIBUTIVE, i);
-
-			if (!(subExpList.contains(e))) {
-				throw new IllegalPropertyException(createPropErrorMsg(COMMON_FACTOR, subExpList.toString(), i)
-						+ ".Element \"" + e.toString() + "\" not found");
-			}
-
+			final ExpressionList<Element> subExpList = getSubexpressionWithGivenElementForCommonFactor(exp, e, i);
 			final ExpressionList<Element> orderedExpList = conmute(subExpList, subExpList.indexOf(e), 0);
 
 			if (wrapperExp == null) {
 				wrapperExp = subExpList.getSameTypeExpressionList();
 			}
-
 			if (orderedExpList.size() > 2) {
 				commonFactorExp.add(orderedExpList.subExpressionList(1, orderedExpList.size()));
 			} else {
 				commonFactorExp.addAll(orderedExpList.subList(1, orderedExpList.size()));
 			}
-
 		}
 
 		wrapperExp.add(commonFactorExp);
@@ -285,8 +266,80 @@ public final class Properties {
 		if (positions.length == exp.size()) {
 			return wrapperExp;
 		}
-
 		return createFinalExpression(exp, positions, wrapperExp);
+	}
+
+	/**
+	 * @return list with accepted properties
+	 */
+	public static List<String> acceptedProperties() {
+		return acceptedProperties;
+	}
+
+	/**
+	 * Checks if an expression admits a given property
+	 *
+	 * @param element
+	 *            expression to check
+	 * @param propName
+	 *            property to decide if can be applied
+	 * @throws IllegalPropertyException
+	 *             if the property can not be applied
+	 */
+	private static void checkValidOperation(Element element, String propName, int position)
+			throws IllegalPropertyException {
+		if (!element.isValidProperty(propName)) {
+			throw new IllegalPropertyException(createPropErrorMsg(propName, element.toString(), position));
+		}
+	}
+
+	/**
+	 * Checks if two indexes are well positionated
+	 *
+	 * @param fromIndex
+	 *            starting index
+	 * @param toIndex
+	 *            ending index
+	 */
+	private static void checkIndex(int fromIndex, int toIndex) {
+		if (toIndex - fromIndex <= 0) {
+			throw new IllegalArgumentException(
+					"fromIndex (" + fromIndex + ") should be smaller than toIndex (" + toIndex + ")");
+		}
+
+	}
+
+	/**
+	 * Checks if all elements of an ExpressionList are selected
+	 *
+	 * @param size
+	 *            size of the list
+	 * @param fromIndex
+	 *            starting index
+	 * @param toIndex
+	 *            ending index
+	 * @return true if all elements are selected; false if not
+	 */
+	private static boolean allElementsAreSelected(int size, int fromIndex, int toIndex) {
+		return fromIndex == 0 && toIndex == size - 1;
+	}
+
+	/**
+	 * Get the elements to associate
+	 *
+	 * @param exp
+	 *            expression with the elements
+	 * @param fromIndex
+	 *            starting index
+	 * @param toIndex
+	 *            ending index
+	 * @return ExpressionList with the selected elements
+	 */
+	private static ExpressionList<Element> getAssociatedElements(ExpressionList<Element> exp, int fromIndex,
+			int toIndex) {
+		final ExpressionList<Element> associatedElement = exp.getSameTypeExpressionList();
+		associatedElement.addAll(exp.subList(fromIndex, toIndex + 1));
+		return associatedElement;
 	}
 
 	/**
@@ -299,6 +352,34 @@ public final class Properties {
 	private static ExpressionList<Element> getExpressionList(Element e) {
 		checkExpressionList(e);
 		return (ExpressionList<Element>) e;
+	}
+
+	/**
+	 * Checks if the given element is a type instance
+	 *
+	 * @param element
+	 *            expression to check
+	 * @param type
+	 *            class that element should be
+	 */
+	private static void checkElementType(Element element, Class<?> type) {
+		if (!(type.isInstance(element))) {
+			throw new IllegalArgumentException(createTypeErrorMsg(element.getClass().getName(), type.getName()));
+		}
+	}
+
+	/**
+	 * Checks if the element given is a MULList instance
+	 *
+	 * @param element
+	 *            expression to check
+	 */
+	private static void checkExpressionList(Element element) {
+		try {
+			checkElementType(element, ExpressionList.class);
+		} catch (final IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -347,8 +428,8 @@ public final class Properties {
 	}
 
 	/**
-	 * Distributes a single element with a simple expression
-	 * (f.e. a*(b+c) = (a*b)+(a*c)
+	 * Distributes a single element with a simple expression (f.e. a*(b+c) =
+	 * (a*b)+(a*c)
 	 *
 	 * @param exp
 	 *            main expression
@@ -394,81 +475,46 @@ public final class Properties {
 	}
 
 	/**
-	 * Checks if the element given is a MULList instance
-	 *
-	 * @param element
-	 *            expression to check
-	 */
-	private static void checkExpressionList(Element element) {
-		try {
-			checkElementType(element, ExpressionList.class);
-		} catch (final IllegalArgumentException e) {
-			throw e;
-		}
-	}
-
-	/**
-	 * Checks if the given element is a type instance
-	 *
-	 * @param element
-	 *            expression to check
-	 * @param type
-	 *            class that element should be
-	 */
-	private static void checkElementType(Element element, Class<?> type) {
-		if (!(type.isInstance(element))) {
-			throw new IllegalArgumentException(createTypeErrorMsg(element.getClass().getName(), type.getName()));
-		}
-	}
-
-	/**
-	 * Checks if an expression admits a given property
-	 *
-	 * @param element
-	 *            expression to check
-	 * @param propName
-	 *            property to decide if can be applied
-	 * @throws IllegalPropertyException
-	 *             if the property can not be applied
-	 */
-	private static void checkValidOperation(Element element, String propName, int position)
-			throws IllegalPropertyException {
-		if (!element.isValidProperty(propName)) {
-			throw new IllegalPropertyException(createPropErrorMsg(propName, element.toString(), position));
-		}
-	}
-
-	/**
-	 * Checks if all elements of an ExpressionList are selected
-	 *
-	 * @param size
-	 *            size of the list
-	 * @param fromIndex
-	 *            starting index
-	 * @param toIndex
-	 *            ending index
-	 * @return true if all elements are selected; false if not
-	 */
-	private static boolean allElementsAreSelected(int size, int fromIndex, int toIndex) {
-		return fromIndex == 0 && toIndex == size - 1;
-	}
-
-	/**
-	 * Get the elements to associate
+	 * Checks if there is at least 2 elements
 	 *
 	 * @param exp
-	 *            expression with the elements
-	 * @param fromIndex
-	 *            starting index
-	 * @param toIndex
-	 *            ending index
-	 * @return ExpressionList with the selected elements
+	 *            expression
+	 * @param size
+	 *            size to check
+	 * @throws IllegalPropertyException
+	 *             if there is less than 2 elements
 	 */
-	private static ExpressionList<Element> getAssociatedElements(ExpressionList<Element> exp, int fromIndex,
-			int toIndex) {
-		final ExpressionList<Element> associatedElement = exp.getSameTypeExpressionList();
-		associatedElement.addAll(exp.subList(fromIndex, toIndex + 1));
-		return associatedElement;
+	private static void checkPositionsSize(ExpressionList<Element> exp, int size) throws IllegalPropertyException {
+		if (size < 2) {
+			throw new IllegalPropertyException(
+					createPropErrorMsg(COMMON_FACTOR, exp.toString(), 0) + ". Need at least 2 items");
+		}
+	}
+
+	/**
+	 * Retrieves a subexpression at given position, checking if that expression
+	 * has a given element
+	 *
+	 * @param exp
+	 *            main expression
+	 * @param e
+	 *            element to check if it's on the subexpression
+	 * @param i
+	 *            index of the subexpression to get
+	 * @return subexpression with element given
+	 * @throws IllegalPropertyException
+	 *             if no subexpression was found
+	 */
+	private static ExpressionList<Element> getSubexpressionWithGivenElementForCommonFactor(ExpressionList<Element> exp,
+			Element e, final int i) throws IllegalPropertyException {
+		final ExpressionList<Element> subExpList = getExpressionList(exp.get(i));
+		checkValidOperation(subExpList, DISTRIBUTIVE, i);
+
+		if (!(subExpList.contains(e))) {
+			throw new IllegalPropertyException(createPropErrorMsg(COMMON_FACTOR, subExpList.toString(), i)
+					+ ".Element \"" + e.toString() + "\" not found");
+		}
+		return subExpList;
 	}
 
 	/**
@@ -483,7 +529,7 @@ public final class Properties {
 	 * @return message with the given attributes
 	 */
 	private static String createPropErrorMsg(String property, String exp, int position) {
-		return PROP_ERROR.replaceFirst("\\*", property).replaceFirst("\\*", exp).replaceFirst("\\*", position + "");
+		return PROP_ERROR.replaceFirst("\\?", property).replaceFirst("\\?", exp).replaceFirst("\\?", position + "");
 	}
 
 	/**
@@ -496,22 +542,6 @@ public final class Properties {
 	 * @return message with the given attributes
 	 */
 	private static String createTypeErrorMsg(String received, String expected) {
-		return TYPE_ERROR.replaceFirst("\\*", received).replaceFirst("\\*", expected);
-	}
-
-	/**
-	 * Checks if two indexes are well positionated
-	 *
-	 * @param fromIndex
-	 *            starting index
-	 * @param toIndex
-	 *            ending index
-	 */
-	private static void checkIndex(int fromIndex, int toIndex) {
-		if (toIndex - fromIndex <= 0) {
-			throw new IllegalArgumentException(
-					"fromIndex (" + fromIndex + ") should be smaller than toIndex (" + toIndex + ")");
-		}
-
+		return TYPE_ERROR.replaceFirst("\\?", received).replaceFirst("\\?", expected);
 	}
 }
