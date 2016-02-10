@@ -1,4 +1,4 @@
-package es.uam.eps.expressionstypes;
+package es.uam.eps.expressions.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
