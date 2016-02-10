@@ -1,7 +1,10 @@
-package es.uam.eps.expressions.types.interfaces;
+package es.uam.eps.expressions.types;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Operator;
 
 /**
  * Implements a list of expressions
@@ -14,8 +17,10 @@ import java.util.List;
  * @see es.uam.eps.expressions.types.interfaces.Element
  */
 public abstract class ExpressionList<E extends Element> extends ArrayList<Element> implements Element {
+
 	/** Type of the list */
 	private final Operator operator;
+
 	/** Names of the accepted properties */
 	protected final List<String> validProperties;
 

@@ -3,8 +3,8 @@ package es.uam.eps.expressions.types.operations;
 import java.util.List;
 
 import es.uam.eps.expressions.properties.Properties;
+import es.uam.eps.expressions.types.ExpressionList;
 import es.uam.eps.expressions.types.interfaces.Element;
-import es.uam.eps.expressions.types.interfaces.ExpressionList;
 import es.uam.eps.expressions.types.interfaces.Operator;
 
 /**

@@ -2,7 +2,7 @@ package es.uam.eps.expressions.types.interfaces;
 
 /**
  * Operations accepted by the CAS
- * 
+ *
  * @author Rodrigo de Blas
  *
  */
@@ -15,7 +15,6 @@ public enum Operator {
 		this.value = value;
 	}
 
-	// OR
 	@Override
 	public String toString() {
 		return value;

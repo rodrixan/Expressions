@@ -14,7 +14,7 @@ import es.uam.eps.expressions.types.interfaces.Element;
  */
 public class SingleExpression implements Element {
 
-	private String txt;
+	private final String txt;
 
 	public SingleExpression(String txt) {
 		this.txt = txt;
@@ -22,7 +22,6 @@ public class SingleExpression implements Element {
 
 	@Override
 	public String toString() {
-
 		return txt;
 	}
 
@@ -47,7 +46,6 @@ public class SingleExpression implements Element {
 	}
 
 	@Override
-
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

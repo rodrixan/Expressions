@@ -1,9 +1,9 @@
 package es.uam.eps.expressions.main;
 
 import es.uam.eps.expressions.properties.Properties;
+import es.uam.eps.expressions.types.ExpressionList;
 import es.uam.eps.expressions.types.SingleExpression;
 import es.uam.eps.expressions.types.interfaces.Element;
-import es.uam.eps.expressions.types.interfaces.ExpressionList;
 import es.uam.eps.expressions.types.operations.MULList;
 import es.uam.eps.expressions.types.operations.SUMList;
 
@@ -40,6 +40,10 @@ public class Main {
 		System.out.println();
 		System.out.println("---SIMPLE COMMON FACTOR---");
 		showSimpleCommonFactor();
+
+		System.out.println();
+		System.out.println("---COMPLEX COMMON FACTOR---");
+		showComplexCommonFactor();
 
 	}
 
@@ -178,6 +182,49 @@ public class Main {
 		try {
 			final ExpressionList<Element> commonFactorList = Properties.commonFactor(sumList, new SingleExpression("a"),
 					new int[] { 0, 1, 2 });
+			System.out.println("Common factor list: " + commonFactorList.toString());
+
+		} catch (final Exception e) {
+			System.err.println("ERROR: " + e.getMessage());
+		}
+	}
+
+	private static void showComplexCommonFactor() {
+
+		final ExpressionList<Element> sumList = new SUMList<Element>();
+
+		final ExpressionList<Element> item1 = new MULList<>();
+
+		item1.add(new SingleExpression("a"));
+		item1.add(new SingleExpression("b"));
+
+		final ExpressionList<Element> item2 = new MULList<>();
+
+		item2.add(new SingleExpression("a"));
+		item2.add(new SingleExpression("c"));
+		item2.add(new SingleExpression("d"));
+
+		final ExpressionList<Element> item3 = new MULList<>();
+
+		final ExpressionList<Element> subItem31 = new SUMList<>();
+
+		item3.add(new SingleExpression("a"));
+		subItem31.add(new SingleExpression("e"));
+		subItem31.add(new SingleExpression("f"));
+
+		item3.add(subItem31);
+
+		sumList.add(new SingleExpression("i"));
+		sumList.add(item1);
+		sumList.add(new SingleExpression("h"));
+		sumList.add(item2);
+		sumList.add(item3);
+		sumList.add(new SingleExpression("g"));
+
+		System.out.println("Original list: " + sumList.toString());
+		try {
+			final ExpressionList<Element> commonFactorList = Properties.commonFactor(sumList, new SingleExpression("a"),
+					new int[] { 1, 3, 4 });
 			System.out.println("Common factor list: " + commonFactorList.toString());
 
 		} catch (final Exception e) {
