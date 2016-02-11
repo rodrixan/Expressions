@@ -9,7 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import es.uam.eps.expressions.exceptions.IllegalPropertyException;
 import es.uam.eps.expressions.types.ExpressionList;
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 
 /**
  * Arithmetic Operation properties
@@ -23,6 +23,7 @@ public final class Properties {
 	public static final String CONMUTATIVE = "conmutative";
 	public static final String DISTRIBUTIVE = "distributive";
 	public static final String COMMON_FACTOR = "common factor";
+	public static final String NEUTRAL_ELEMENT = "neutral element";
 
 	private static final List<String> acceptedProperties = new ArrayList<String>();
 
@@ -57,15 +58,15 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Element> associate(ExpressionList<Element> exp, int fromIndex, int toIndex)
+	public static ExpressionList<Expression> associate(ExpressionList<Expression> exp, int fromIndex, int toIndex)
 			throws IllegalPropertyException {
 		checkValidOperation(exp, ASSOCIATIVE, fromIndex);
 		checkIndex(fromIndex, toIndex);
 		if (allElementsAreSelected(exp.size(), fromIndex, toIndex)) {
 			return exp;
 		}
-		final ExpressionList<Element> ret = exp.getSameTypeExpressionList();
-		final ExpressionList<Element> associatedElements = getAssociatedElements(exp, fromIndex, toIndex);
+		final ExpressionList<Expression> ret = exp.getSameTypeExpressionList();
+		final ExpressionList<Expression> associatedElements = getAssociatedElements(exp, fromIndex, toIndex);
 
 		ret.addAll(exp.subList(0, fromIndex));
 
@@ -90,20 +91,20 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Element> disassociate(ExpressionList<Element> expression, int chosenIndex)
+	public static ExpressionList<Expression> disassociate(ExpressionList<Expression> expression, int chosenIndex)
 			throws IllegalPropertyException {
 
 		checkValidOperation(expression, ASSOCIATIVE, chosenIndex);
 
-		final ExpressionList<Element> chosenList = getExpressionList(expression.get(chosenIndex));
+		final ExpressionList<Expression> chosenList = getExpressionList(expression.get(chosenIndex));
 		checkValidOperation(chosenList, ASSOCIATIVE, chosenIndex);
 		checkElementType(chosenList, expression.getClass());
 
-		final ExpressionList<Element> ret = expression.getSameTypeExpressionList();
+		final ExpressionList<Expression> ret = expression.getSameTypeExpressionList();
 
 		ret.addAll(expression.subList(0, chosenIndex));
 
-		for (final Element e : chosenList) {
+		for (final Expression e : chosenList) {
 			ret.add(e);
 		}
 
@@ -127,14 +128,14 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Element> conmute(ExpressionList<Element> exp, int chosen, int end)
+	public static ExpressionList<Expression> conmute(ExpressionList<Expression> exp, int chosen, int end)
 			throws IllegalPropertyException {
 		checkValidOperation(exp, CONMUTATIVE, chosen);
-		final ExpressionList<Element> ret = exp.getSameTypeExpressionList();
+		final ExpressionList<Expression> ret = exp.getSameTypeExpressionList();
 
 		ret.addAll(exp);
 
-		final Element chosenElement = ret.remove(chosen);
+		final Expression chosenElement = ret.remove(chosen);
 
 		ret.add(end, chosenElement);
 
@@ -159,19 +160,19 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Element> distribute(ExpressionList<Element> exp, int elementIndex, int innerExpIndex)
+	public static ExpressionList<Expression> distribute(ExpressionList<Expression> exp, int elementIndex, int innerExpIndex)
 			throws IllegalPropertyException {
 		checkValidOperation(exp, DISTRIBUTIVE, elementIndex);
 
-		final ExpressionList<Element> innerOpList = getExpressionList(exp.get(innerExpIndex));
+		final ExpressionList<Expression> innerOpList = getExpressionList(exp.get(innerExpIndex));
 
 		checkValidOperation(innerOpList, COMMON_FACTOR, innerExpIndex);
 
-		final ExpressionList<Element> mainOpList = exp.getSameTypeExpressionList();
+		final ExpressionList<Expression> mainOpList = exp.getSameTypeExpressionList();
 
-		final Element elementToDistribute = exp.get(elementIndex);
+		final Expression elementToDistribute = exp.get(elementIndex);
 
-		final ExpressionList<Element> distributedList = distributeSingleElement(exp, innerOpList, elementIndex);
+		final ExpressionList<Expression> distributedList = distributeSingleElement(exp, innerOpList, elementIndex);
 
 		// If there is only 2 elements in the expression, distribute one against
 		// another
@@ -204,19 +205,19 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Element> distribute(ExpressionList<Element> exp, int innerExpIndex)
+	public static ExpressionList<Expression> distribute(ExpressionList<Expression> exp, int innerExpIndex)
 			throws IllegalPropertyException {
 		checkValidOperation(exp, DISTRIBUTIVE, innerExpIndex);
 
-		final ExpressionList<Element> innerExp = getExpressionList(exp.get(innerExpIndex));
+		final ExpressionList<Expression> innerExp = getExpressionList(exp.get(innerExpIndex));
 		checkValidOperation(innerExp, COMMON_FACTOR, innerExpIndex);
 
-		final ExpressionList<Element> orderedExp = createAssociatedExpressionWithInnerExpAtLast(exp, innerExpIndex);
+		final ExpressionList<Expression> orderedExp = createAssociatedExpressionWithInnerExpAtLast(exp, innerExpIndex);
 
 		// ordered exp must have 2 elements
-		final ExpressionList<Element> distributedExp = distribute(orderedExp, 0, 1);
+		final ExpressionList<Expression> distributedExp = distribute(orderedExp, 0, 1);
 
-		final ExpressionList<Element> disassociatedExp = distributedExp.getSameTypeExpressionList();
+		final ExpressionList<Expression> disassociatedExp = distributedExp.getSameTypeExpressionList();
 		for (int i = 0; i < distributedExp.size(); i++) {
 			disassociatedExp.add(disassociate(getExpressionList(distributedExp.get(i)), 0));
 		}
@@ -237,18 +238,18 @@ public final class Properties {
 	 *         rest of the main expression
 	 * @throws IllegalPropertyException
 	 */
-	public static ExpressionList<Element> commonFactor(ExpressionList<Element> exp, Element e, int[] positions)
+	public static ExpressionList<Expression> commonFactor(ExpressionList<Expression> exp, Expression e, int[] positions)
 			throws IllegalPropertyException {
 
 		checkValidOperation(exp, COMMON_FACTOR, 0);
 		checkPositionsSize(exp, positions.length);
 
-		final ExpressionList<Element> commonFactorExp = exp.getSameTypeExpressionList();
-		ExpressionList<Element> wrapperExp = null;
+		final ExpressionList<Expression> commonFactorExp = exp.getSameTypeExpressionList();
+		ExpressionList<Expression> wrapperExp = null;
 		for (final int i : positions) {
 
-			final ExpressionList<Element> subExpList = getSubexpressionWithGivenElementForCommonFactor(exp, e, i);
-			final ExpressionList<Element> orderedExpList = conmute(subExpList, subExpList.indexOf(e), 0);
+			final ExpressionList<Expression> subExpList = getSubexpressionWithGivenElementForCommonFactor(exp, e, i);
+			final ExpressionList<Expression> orderedExpList = conmute(subExpList, subExpList.indexOf(e), 0);
 
 			if (wrapperExp == null) {
 				wrapperExp = subExpList.getSameTypeExpressionList();
@@ -270,6 +271,38 @@ public final class Properties {
 	}
 
 	/**
+	 * Removes the neutral element at given position
+	 * (f.e. a+b+0 = a+b ; a*b*1 = a*b)
+	 *
+	 * @param exp
+	 *            original expression
+	 * @param position
+	 * @return expression list without the neutral element at position desired;
+	 *         same expression if result is one element sized.
+	 * @throws IllegalPropertyException
+	 */
+	public static ExpressionList<Expression> removeNeutralElement(ExpressionList<Expression> exp, int position)
+			throws IllegalPropertyException {
+		checkValidOperation(exp, NEUTRAL_ELEMENT, position);
+
+		final ExpressionList<Expression> finalExp = exp.getSameTypeExpressionList();
+
+		finalExp.addAll(exp);
+
+		final Expression neutralElement = finalExp.remove(position);
+		if (!(exp.getNeutralElement().equals(neutralElement))) {
+			final String msg = "Neutral element for operation " + exp.getOperator().toString() + " is "
+					+ exp.getNeutralElement().symbolicExpression() + ", but element selected is "
+					+ neutralElement.symbolicExpression();
+			throw new IllegalArgumentException(msg);
+		}
+		if (finalExp.size() == 1) {
+			return exp;
+		}
+		return finalExp;
+	}
+
+	/**
 	 * @return list with accepted properties
 	 */
 	public static List<String> acceptedProperties() {
@@ -286,7 +319,7 @@ public final class Properties {
 	 * @throws IllegalPropertyException
 	 *             if the property can not be applied
 	 */
-	private static void checkValidOperation(Element element, String propName, int position)
+	private static void checkValidOperation(Expression element, String propName, int position)
 			throws IllegalPropertyException {
 		if (!element.isValidProperty(propName)) {
 			throw new IllegalPropertyException(createPropErrorMsg(propName, element.toString(), position));
@@ -335,9 +368,9 @@ public final class Properties {
 	 *            ending index
 	 * @return ExpressionList with the selected elements
 	 */
-	private static ExpressionList<Element> getAssociatedElements(ExpressionList<Element> exp, int fromIndex,
+	private static ExpressionList<Expression> getAssociatedElements(ExpressionList<Expression> exp, int fromIndex,
 			int toIndex) {
-		final ExpressionList<Element> associatedElement = exp.getSameTypeExpressionList();
+		final ExpressionList<Expression> associatedElement = exp.getSameTypeExpressionList();
 		associatedElement.addAll(exp.subList(fromIndex, toIndex + 1));
 		return associatedElement;
 	}
@@ -349,9 +382,9 @@ public final class Properties {
 	 * @return ExpressionList of the element
 	 */
 	@SuppressWarnings("unchecked") // checked before return
-	private static ExpressionList<Element> getExpressionList(Element e) {
+	private static ExpressionList<Expression> getExpressionList(Expression e) {
 		checkExpressionList(e);
-		return (ExpressionList<Element>) e;
+		return (ExpressionList<Expression>) e;
 	}
 
 	/**
@@ -362,7 +395,7 @@ public final class Properties {
 	 * @param type
 	 *            class that element should be
 	 */
-	private static void checkElementType(Element element, Class<?> type) {
+	private static void checkElementType(Expression element, Class<?> type) {
 		if (!(type.isInstance(element))) {
 			throw new IllegalArgumentException(createTypeErrorMsg(element.getClass().getName(), type.getName()));
 		}
@@ -374,7 +407,7 @@ public final class Properties {
 	 * @param element
 	 *            expression to check
 	 */
-	private static void checkExpressionList(Element element) {
+	private static void checkExpressionList(Expression element) {
 		try {
 			checkElementType(element, ExpressionList.class);
 		} catch (final IllegalArgumentException e) {
@@ -394,11 +427,11 @@ public final class Properties {
 	 *            subexpression where it was extracted from
 	 * @return
 	 */
-	private static ExpressionList<Element> createFinalExpression(ExpressionList<Element> originalExp, int[] positions,
-			ExpressionList<Element> commonFactorExp) {
+	private static ExpressionList<Expression> createFinalExpression(ExpressionList<Expression> originalExp, int[] positions,
+			ExpressionList<Expression> commonFactorExp) {
 		final int minPos = Collections.min(Arrays.asList(ArrayUtils.toObject(positions)));
 
-		final ExpressionList<Element> finalExp = removeAllByIndex(originalExp, positions);
+		final ExpressionList<Expression> finalExp = removeAllByIndex(originalExp, positions);
 
 		if (minPos >= finalExp.size()) {
 			finalExp.add(commonFactorExp);
@@ -418,8 +451,8 @@ public final class Properties {
 	 *            indexes of the elements to remove
 	 * @return new expression list without the desired elements
 	 */
-	private static ExpressionList<Element> removeAllByIndex(ExpressionList<Element> exp, int[] positions) {
-		final ExpressionList<Element> finalExp = exp.getSameTypeExpressionList();
+	private static ExpressionList<Expression> removeAllByIndex(ExpressionList<Expression> exp, int[] positions) {
+		final ExpressionList<Expression> finalExp = exp.getSameTypeExpressionList();
 		finalExp.addAll(exp);
 		for (final int i : positions) {
 			finalExp.remove(exp.get(i));
@@ -439,12 +472,12 @@ public final class Properties {
 	 *            index of the element to distribute
 	 * @return distributed list
 	 */
-	private static ExpressionList<Element> distributeSingleElement(ExpressionList<Element> exp,
-			ExpressionList<Element> innerExp, int elementIndex) {
-		final ExpressionList<Element> mainOpList = innerExp.getSameTypeExpressionList();
+	private static ExpressionList<Expression> distributeSingleElement(ExpressionList<Expression> exp,
+			ExpressionList<Expression> innerExp, int elementIndex) {
+		final ExpressionList<Expression> mainOpList = innerExp.getSameTypeExpressionList();
 
-		for (final Element e : innerExp) {
-			final ExpressionList<Element> item = exp.getSameTypeExpressionList();
+		for (final Expression e : innerExp) {
+			final ExpressionList<Expression> item = exp.getSameTypeExpressionList();
 			item.add(exp.get(elementIndex));
 			item.add(e);
 			mainOpList.add(item);
@@ -465,10 +498,10 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	private static ExpressionList<Element> createAssociatedExpressionWithInnerExpAtLast(ExpressionList<Element> exp,
+	private static ExpressionList<Expression> createAssociatedExpressionWithInnerExpAtLast(ExpressionList<Expression> exp,
 			int innerExpIndex) throws IllegalPropertyException {
 
-		final ExpressionList<Element> orderedExp = conmute(exp, innerExpIndex, exp.size() - 1);
+		final ExpressionList<Expression> orderedExp = conmute(exp, innerExpIndex, exp.size() - 1);
 		final int newInnerExpIndex = orderedExp.indexOf(exp.get(innerExpIndex));
 
 		return associate(orderedExp, 0, newInnerExpIndex - 1);
@@ -484,7 +517,7 @@ public final class Properties {
 	 * @throws IllegalPropertyException
 	 *             if there is less than 2 elements
 	 */
-	private static void checkPositionsSize(ExpressionList<Element> exp, int size) throws IllegalPropertyException {
+	private static void checkPositionsSize(ExpressionList<Expression> exp, int size) throws IllegalPropertyException {
 		if (size < 2) {
 			throw new IllegalPropertyException(
 					createPropErrorMsg(COMMON_FACTOR, exp.toString(), 0) + ". Need at least 2 items");
@@ -505,9 +538,9 @@ public final class Properties {
 	 * @throws IllegalPropertyException
 	 *             if no subexpression was found
 	 */
-	private static ExpressionList<Element> getSubexpressionWithGivenElementForCommonFactor(ExpressionList<Element> exp,
-			Element e, final int i) throws IllegalPropertyException {
-		final ExpressionList<Element> subExpList = getExpressionList(exp.get(i));
+	private static ExpressionList<Expression> getSubexpressionWithGivenElementForCommonFactor(ExpressionList<Expression> exp,
+			Expression e, final int i) throws IllegalPropertyException {
+		final ExpressionList<Expression> subExpList = getExpressionList(exp.get(i));
 		checkValidOperation(subExpList, DISTRIBUTIVE, i);
 
 		if (!(subExpList.contains(e))) {

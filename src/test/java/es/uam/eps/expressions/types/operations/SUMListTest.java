@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.SingleExpression;
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 import es.uam.eps.expressions.types.operations.SUMList;
 
 public class SUMListTest {
-	private SUMList<Element> sumList = new SUMList<>();
+	private SUMList<Expression> sumList = new SUMList<>();
 
 	@Before
 	public void setup() {
@@ -36,7 +36,7 @@ public class SUMListTest {
 
 	@Test
 	public void complexSymbolicExpressionTest() {
-		final SUMList<Element> innerList = new SUMList<Element>();
+		final SUMList<Expression> innerList = new SUMList<Expression>();
 		innerList.add(new SingleExpression("f"));
 		innerList.add(new SingleExpression("g"));
 
@@ -59,6 +59,6 @@ public class SUMListTest {
 
 	@Test
 	public void shouldReturnNotAvaliableValue() {
-		assertEquals(Element.VALUE_NOT_AVAILABLE, sumList.getValue());
+		assertEquals(Expression.VALUE_NOT_AVAILABLE, sumList.getValue());
 	}
 }

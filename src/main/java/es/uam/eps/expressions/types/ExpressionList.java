@@ -3,7 +3,7 @@ package es.uam.eps.expressions.types;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 import es.uam.eps.expressions.types.interfaces.Operator;
 
 /**
@@ -14,20 +14,23 @@ import es.uam.eps.expressions.types.interfaces.Operator;
  * @param <E>
  *            parameter of the class. Must implement Element interface
  *
- * @see es.uam.eps.expressions.types.interfaces.Element
+ * @see es.uam.eps.expressions.types.interfaces.Expression
  */
-public abstract class ExpressionList<E extends Element> extends ArrayList<Element> implements Element {
+public abstract class ExpressionList<E extends Expression> extends ArrayList<Expression> implements Expression {
 
 	/** Type of the list */
 	private final Operator operator;
 
+	private final SingleExpression neutralElement;
+
 	/** Names of the accepted properties */
 	protected final List<String> validProperties;
 
-	public ExpressionList(Operator operator) {
+	protected ExpressionList(Operator operator, SingleExpression neutralElement) {
 		super();
 		this.operator = operator;
 		validProperties = new ArrayList<>();
+		this.neutralElement = neutralElement;
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 	public String symbolicExpression() {
 		final StringBuilder sb = new StringBuilder();
 		int i = 0;
-		for (final Element e : this) {
+		for (final Expression e : this) {
 			if (e instanceof ExpressionList) {
 				sb.append("(" + e.symbolicExpression() + ")");
 			} else {
@@ -75,4 +78,11 @@ public abstract class ExpressionList<E extends Element> extends ArrayList<Elemen
 	 * @return an ExpressionList of the same type
 	 */
 	public abstract ExpressionList<E> getSameTypeExpressionList();
+
+	/**
+	 * @return the neutral element of the expression list
+	 */
+	public SingleExpression getNeutralElement() {
+		return neutralElement;
+	}
 }

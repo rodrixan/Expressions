@@ -4,7 +4,8 @@ import java.util.List;
 
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.ExpressionList;
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.SingleExpression;
+import es.uam.eps.expressions.types.interfaces.Expression;
 import es.uam.eps.expressions.types.interfaces.Operator;
 
 /**
@@ -15,17 +16,19 @@ import es.uam.eps.expressions.types.interfaces.Operator;
  * @param <E>
  *            parameter of the class. Must implement Element interface
  */
-public class SUMList<E extends Element> extends ExpressionList<Element> {
+public class SUMList<E extends Expression> extends ExpressionList<Expression> {
 
 	public SUMList() {
-		super(Operator.SUM);
+		super(Operator.SUM, new SingleExpression("0"));
 		loadProperties();
+
 	}
 
 	private void loadProperties() {
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
 		validProperties.add(Properties.COMMON_FACTOR);
+		validProperties.add(Properties.NEUTRAL_ELEMENT);
 	}
 
 	@Override
@@ -42,18 +45,18 @@ public class SUMList<E extends Element> extends ExpressionList<Element> {
 
 	@Override
 	public int getValue() {
-		return Element.VALUE_NOT_AVAILABLE;
+		return Expression.VALUE_NOT_AVAILABLE;
 	}
 
 	@Override
-	public ExpressionList<Element> subExpressionList(int fromIndex, int toIndex) {
-		final ExpressionList<Element> ret = new SUMList<>();
+	public ExpressionList<Expression> subExpressionList(int fromIndex, int toIndex) {
+		final ExpressionList<Expression> ret = new SUMList<>();
 		ret.addAll(subList(fromIndex, toIndex));
 		return ret;
 	}
 
 	@Override
-	public ExpressionList<Element> getSameTypeExpressionList() {
-		return new SUMList<Element>();
+	public ExpressionList<Expression> getSameTypeExpressionList() {
+		return new SUMList<Expression>();
 	}
 }

@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.SingleExpression;
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 import es.uam.eps.expressions.types.operations.MULList;
 
 public class MULListTest {
-	private MULList<Element> mulList = new MULList<>();
+	private MULList<Expression> mulList = new MULList<>();
 
 	@Before
 	public void setup() {
@@ -36,7 +36,7 @@ public class MULListTest {
 
 	@Test
 	public void complexSymbolicExpressionTest() {
-		final MULList<Element> innerList = new MULList<Element>();
+		final MULList<Expression> innerList = new MULList<Expression>();
 		innerList.add(new SingleExpression("f"));
 		innerList.add(new SingleExpression("g"));
 
@@ -59,7 +59,7 @@ public class MULListTest {
 
 	@Test
 	public void shouldReturnNotAvaliableValue() {
-		assertEquals(Element.VALUE_NOT_AVAILABLE, mulList.getValue());
+		assertEquals(Expression.VALUE_NOT_AVAILABLE, mulList.getValue());
 	}
 
 }

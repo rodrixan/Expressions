@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 
 /**
  * Main Class for an expression: it can be a number, variable or a list
@@ -12,9 +12,9 @@ import es.uam.eps.expressions.types.interfaces.Element;
  * @author Rodrigo de Blas
  *
  */
-public class SingleExpression implements Element {
+public class SingleExpression implements Expression {
 
-	private final String txt;
+	protected final String txt;
 
 	public SingleExpression(String txt) {
 		this.txt = txt;
@@ -27,7 +27,7 @@ public class SingleExpression implements Element {
 
 	@Override
 	public int getValue() {
-		return Element.VALUE_NOT_AVAILABLE;
+		return Expression.VALUE_NOT_AVAILABLE;
 	}
 
 	@Override

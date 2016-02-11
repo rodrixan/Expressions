@@ -8,7 +8,7 @@ import java.util.List;
  * @author Rodrigo de Blas
  *
  */
-public interface Element {
+public interface Expression {
 	public static final int VALUE_NOT_AVAILABLE = Integer.MIN_VALUE;
 
 	/**

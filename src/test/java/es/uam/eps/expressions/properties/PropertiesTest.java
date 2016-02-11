@@ -13,7 +13,7 @@ import org.junit.Test;
 import es.uam.eps.expressions.exceptions.IllegalPropertyException;
 import es.uam.eps.expressions.types.ExpressionList;
 import es.uam.eps.expressions.types.SingleExpression;
-import es.uam.eps.expressions.types.interfaces.Element;
+import es.uam.eps.expressions.types.interfaces.Expression;
 import es.uam.eps.expressions.types.operations.MULList;
 import es.uam.eps.expressions.types.operations.SUMList;
 
@@ -30,7 +30,7 @@ public class PropertiesTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFailAssociate() {
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 		sumList.add(new SingleExpression("a"));
 		sumList.add(new SingleExpression("b"));
 		sumList.add(new SingleExpression("c"));
@@ -46,11 +46,11 @@ public class PropertiesTest {
 
 	@Test
 	public void testAssociate() {
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 		sumList.add(new SingleExpression("a"));
 		sumList.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> mulList = new MULList<>();
+		final ExpressionList<Expression> mulList = new MULList<>();
 		mulList.add(new SingleExpression("c"));
 		mulList.add(new SingleExpression("d"));
 
@@ -67,18 +67,18 @@ public class PropertiesTest {
 
 	@Test
 	public void testDisassociate() {
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 		sumList.add(new SingleExpression("a"));
 		sumList.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> innerSumList = new SUMList<>();
+		final ExpressionList<Expression> innerSumList = new SUMList<>();
 		innerSumList.add(new SingleExpression("c"));
 		innerSumList.add(new SingleExpression("d"));
 
 		sumList.add(innerSumList);
 		sumList.add(new SingleExpression("e"));
 
-		final ExpressionList<Element> innerSumList2 = new SUMList<>();
+		final ExpressionList<Expression> innerSumList2 = new SUMList<>();
 		innerSumList2.add(new SingleExpression("f"));
 		innerSumList2.add(new SingleExpression("g"));
 
@@ -94,11 +94,11 @@ public class PropertiesTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFailDisassociate() {
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 		sumList.add(new SingleExpression("a"));
 		sumList.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> mulList = new MULList<>();
+		final ExpressionList<Expression> mulList = new MULList<>();
 		mulList.add(new SingleExpression("c"));
 		mulList.add(new SingleExpression("d"));
 
@@ -116,18 +116,18 @@ public class PropertiesTest {
 
 	@Test
 	public void testConmute() {
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 		sumList.add(new SingleExpression("a"));
 		sumList.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> mulList = new MULList<>();
+		final ExpressionList<Expression> mulList = new MULList<>();
 		mulList.add(new SingleExpression("c"));
 		mulList.add(new SingleExpression("d"));
 
 		sumList.add(mulList);
 		sumList.add(new SingleExpression("e"));
 
-		final ExpressionList<Element> innerSumList = new SUMList<>();
+		final ExpressionList<Expression> innerSumList = new SUMList<>();
 		innerSumList.add(new SingleExpression("f"));
 		innerSumList.add(new SingleExpression("g"));
 
@@ -144,7 +144,7 @@ public class PropertiesTest {
 	@Test(expected = IllegalPropertyException.class)
 	public void testFailDistribute() throws IllegalPropertyException {
 
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 
 		sumList.add(new SingleExpression("b"));
 		sumList.add(new SingleExpression("c"));
@@ -157,11 +157,11 @@ public class PropertiesTest {
 	@Test
 	public void testSimpleDistributeOneElement() {
 
-		final ExpressionList<Element> mulList = new MULList<Element>();
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
 
 		mulList.add(new SingleExpression("a"));
 
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 
 		sumList.add(new SingleExpression("b"));
 		sumList.add(new SingleExpression("c"));
@@ -178,13 +178,13 @@ public class PropertiesTest {
 
 	@Test
 	public void testComplexDistributeOneElement() {
-		final ExpressionList<Element> mulList = new MULList<Element>();
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
 
-		final ExpressionList<Element> sumList1 = new SUMList<>();
+		final ExpressionList<Expression> sumList1 = new SUMList<>();
 
 		sumList1.add(new SingleExpression("a"));
 
-		final ExpressionList<Element> innerMulList = new MULList<Element>();
+		final ExpressionList<Expression> innerMulList = new MULList<Expression>();
 		innerMulList.add(new SingleExpression("b"));
 		innerMulList.add(new SingleExpression("c"));
 
@@ -194,7 +194,7 @@ public class PropertiesTest {
 
 		mulList.add(new SingleExpression("d"));
 
-		final ExpressionList<Element> sumList2 = new SUMList<>();
+		final ExpressionList<Expression> sumList2 = new SUMList<>();
 
 		sumList2.add(new SingleExpression("e"));
 		sumList2.add(new SingleExpression("f"));
@@ -211,13 +211,13 @@ public class PropertiesTest {
 
 	@Test
 	public void testDistributeAllElements() {
-		final ExpressionList<Element> mulList = new MULList<Element>();
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
 
 		mulList.add(new SingleExpression("a"));
 		mulList.add(new SingleExpression("b"));
 		mulList.add(new SingleExpression("c"));
 
-		final ExpressionList<Element> sumList = new SUMList<>();
+		final ExpressionList<Expression> sumList = new SUMList<>();
 
 		sumList.add(new SingleExpression("d"));
 		sumList.add(new SingleExpression("e"));
@@ -234,22 +234,22 @@ public class PropertiesTest {
 
 	@Test
 	public void testSimpleCommonFactor() {
-		final ExpressionList<Element> sumList = new SUMList<Element>();
+		final ExpressionList<Expression> sumList = new SUMList<Expression>();
 
-		final ExpressionList<Element> item1 = new MULList<>();
+		final ExpressionList<Expression> item1 = new MULList<>();
 
 		item1.add(new SingleExpression("a"));
 		item1.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> item2 = new MULList<>();
+		final ExpressionList<Expression> item2 = new MULList<>();
 
 		item2.add(new SingleExpression("a"));
 		item2.add(new SingleExpression("c"));
 		item2.add(new SingleExpression("d"));
 
-		final ExpressionList<Element> item3 = new MULList<>();
+		final ExpressionList<Expression> item3 = new MULList<>();
 
-		final ExpressionList<Element> subItem31 = new SUMList<>();
+		final ExpressionList<Expression> subItem31 = new SUMList<>();
 
 		item3.add(new SingleExpression("a"));
 		subItem31.add(new SingleExpression("e"));
@@ -272,7 +272,7 @@ public class PropertiesTest {
 	@Test(expected = IllegalPropertyException.class)
 	public void testFailPropertyCommonFactor() throws IllegalPropertyException {
 
-		final ExpressionList<Element> mulList = new MULList<>();
+		final ExpressionList<Expression> mulList = new MULList<>();
 
 		mulList.add(new SingleExpression("a"));
 		mulList.add(new SingleExpression("b"));
@@ -285,22 +285,22 @@ public class PropertiesTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFailArgumentCommonFactor() {
-		final ExpressionList<Element> sumList = new SUMList<Element>();
+		final ExpressionList<Expression> sumList = new SUMList<Expression>();
 
-		final ExpressionList<Element> item1 = new MULList<>();
+		final ExpressionList<Expression> item1 = new MULList<>();
 
 		item1.add(new SingleExpression("a"));
 		item1.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> item2 = new MULList<>();
+		final ExpressionList<Expression> item2 = new MULList<>();
 
 		item2.add(new SingleExpression("a"));
 		item2.add(new SingleExpression("c"));
 		item2.add(new SingleExpression("d"));
 
-		final ExpressionList<Element> item3 = new MULList<>();
+		final ExpressionList<Expression> item3 = new MULList<>();
 
-		final ExpressionList<Element> subItem31 = new SUMList<>();
+		final ExpressionList<Expression> subItem31 = new SUMList<>();
 
 		item3.add(new SingleExpression("a"));
 		subItem31.add(new SingleExpression("e"));
@@ -323,22 +323,22 @@ public class PropertiesTest {
 
 	@Test
 	public void testComplexCommonFactor() {
-		final ExpressionList<Element> sumList = new SUMList<Element>();
+		final ExpressionList<Expression> sumList = new SUMList<Expression>();
 
-		final ExpressionList<Element> item1 = new MULList<>();
+		final ExpressionList<Expression> item1 = new MULList<>();
 
 		item1.add(new SingleExpression("a"));
 		item1.add(new SingleExpression("b"));
 
-		final ExpressionList<Element> item2 = new MULList<>();
+		final ExpressionList<Expression> item2 = new MULList<>();
 
 		item2.add(new SingleExpression("a"));
 		item2.add(new SingleExpression("c"));
 		item2.add(new SingleExpression("d"));
 
-		final ExpressionList<Element> item3 = new MULList<>();
+		final ExpressionList<Expression> item3 = new MULList<>();
 
-		final ExpressionList<Element> subItem31 = new SUMList<>();
+		final ExpressionList<Expression> subItem31 = new SUMList<>();
 
 		item3.add(new SingleExpression("a"));
 		subItem31.add(new SingleExpression("e"));
@@ -354,13 +354,28 @@ public class PropertiesTest {
 		sumList.add(new SingleExpression("g"));
 
 		try {
-			final ExpressionList<Element> commonFactorList = Properties.commonFactor(sumList, new SingleExpression("a"),
+			final ExpressionList<Expression> commonFactorList = Properties.commonFactor(sumList, new SingleExpression("a"),
 					new int[] { 1, 3, 4 });
 			assertEquals("+[i, *[a, +[b, *[c, d], +[e, f]]], h, g]", commonFactorList.toString());
 		} catch (final IllegalPropertyException e) {
 			fail("ERROR: Shouldn't throw IllegalPropertyException");
 		}
+	}
 
+	@Test
+	public void testRemoveNeutralElement() {
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
+
+		mulList.add(new SingleExpression("a"));
+		mulList.add(new SingleExpression("1"));
+		mulList.add(new SingleExpression("c"));
+
+		try {
+			final ExpressionList<Expression> neutralElementRemovedList = Properties.removeNeutralElement(mulList, 1);
+			assertEquals("*[a, c]", neutralElementRemovedList.toString());
+		} catch (final Exception e) {
+			fail("ERROR: Shouldn't throw Exception");
+		}
 	}
 
 }
