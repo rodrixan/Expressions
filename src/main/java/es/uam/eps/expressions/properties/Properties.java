@@ -9,6 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import es.uam.eps.expressions.exceptions.IllegalPropertyException;
 import es.uam.eps.expressions.types.ExpressionList;
+import es.uam.eps.expressions.types.SingleExpression;
 import es.uam.eps.expressions.types.interfaces.Expression;
 
 /**
@@ -160,8 +161,8 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	public static ExpressionList<Expression> distribute(ExpressionList<Expression> exp, int elementIndex, int innerExpIndex)
-			throws IllegalPropertyException {
+	public static ExpressionList<Expression> distribute(ExpressionList<Expression> exp, int elementIndex,
+			int innerExpIndex) throws IllegalPropertyException {
 		checkValidOperation(exp, DISTRIBUTIVE, elementIndex);
 
 		final ExpressionList<Expression> innerOpList = getExpressionList(exp.get(innerExpIndex));
@@ -237,6 +238,8 @@ public final class Properties {
 	 * @return expresion list with a subexpression as a common factor and the
 	 *         rest of the main expression
 	 * @throws IllegalPropertyException
+	 *             if the expression doesn't support the property (can't be
+	 *             applied)
 	 */
 	public static ExpressionList<Expression> commonFactor(ExpressionList<Expression> exp, Expression e, int[] positions)
 			throws IllegalPropertyException {
@@ -277,9 +280,14 @@ public final class Properties {
 	 * @param exp
 	 *            original expression
 	 * @param position
-	 * @return expression list without the neutral element at position desired;
-	 *         same expression if result is one element sized.
+	 *            index of the neutral element to be removed
+	 * @return expression list without the neutral element at position desired.
+	 *         Result expression can be one element sized. In this case, just
+	 *         convert the list using "convertSingleListToSingleExpression".
 	 * @throws IllegalPropertyException
+	 *             if the expression doesn't support the property (can't be
+	 *             applied)
+	 * @see convertSingleListToSingleExpression
 	 */
 	public static ExpressionList<Expression> removeNeutralElement(ExpressionList<Expression> exp, int position)
 			throws IllegalPropertyException {
@@ -296,10 +304,29 @@ public final class Properties {
 					+ neutralElement.symbolicExpression();
 			throw new IllegalArgumentException(msg);
 		}
-		if (finalExp.size() == 1) {
-			return exp;
-		}
+
 		return finalExp;
+	}
+
+	/**
+	 * Converts a single element expression list into a SingleExpression.
+	 * 
+	 * @param exp
+	 *            expression list to convert, MUST HAVE EXACTLY ONE ELEMENT. If
+	 *            the single element is not a single expression, function will
+	 *            fail
+	 * @return single expression associated with the expression.
+	 */
+	public static SingleExpression convertSingleListToSingleExpression(ExpressionList<Expression> exp) {
+		if (exp.size() != 1) {
+			throw new IllegalArgumentException("Expression \"" + exp.symbolicExpression()
+					+ "\" can't be converted to single expression. Must have excatly one element.");
+		}
+
+		checkElementType(exp.get(0), SingleExpression.class);
+
+		return (SingleExpression) exp.get(0);// checked before
+
 	}
 
 	/**
@@ -427,8 +454,8 @@ public final class Properties {
 	 *            subexpression where it was extracted from
 	 * @return
 	 */
-	private static ExpressionList<Expression> createFinalExpression(ExpressionList<Expression> originalExp, int[] positions,
-			ExpressionList<Expression> commonFactorExp) {
+	private static ExpressionList<Expression> createFinalExpression(ExpressionList<Expression> originalExp,
+			int[] positions, ExpressionList<Expression> commonFactorExp) {
 		final int minPos = Collections.min(Arrays.asList(ArrayUtils.toObject(positions)));
 
 		final ExpressionList<Expression> finalExp = removeAllByIndex(originalExp, positions);
@@ -498,8 +525,8 @@ public final class Properties {
 	 *             if the expression doesn't support the property (can't be
 	 *             applied)
 	 */
-	private static ExpressionList<Expression> createAssociatedExpressionWithInnerExpAtLast(ExpressionList<Expression> exp,
-			int innerExpIndex) throws IllegalPropertyException {
+	private static ExpressionList<Expression> createAssociatedExpressionWithInnerExpAtLast(
+			ExpressionList<Expression> exp, int innerExpIndex) throws IllegalPropertyException {
 
 		final ExpressionList<Expression> orderedExp = conmute(exp, innerExpIndex, exp.size() - 1);
 		final int newInnerExpIndex = orderedExp.indexOf(exp.get(innerExpIndex));
@@ -538,8 +565,8 @@ public final class Properties {
 	 * @throws IllegalPropertyException
 	 *             if no subexpression was found
 	 */
-	private static ExpressionList<Expression> getSubexpressionWithGivenElementForCommonFactor(ExpressionList<Expression> exp,
-			Expression e, final int i) throws IllegalPropertyException {
+	private static ExpressionList<Expression> getSubexpressionWithGivenElementForCommonFactor(
+			ExpressionList<Expression> exp, Expression e, final int i) throws IllegalPropertyException {
 		final ExpressionList<Expression> subExpList = getExpressionList(exp.get(i));
 		checkValidOperation(subExpList, DISTRIBUTIVE, i);
 
