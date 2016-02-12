@@ -10,10 +10,9 @@ import org.junit.Test;
 import es.uam.eps.expressions.properties.Properties;
 import es.uam.eps.expressions.types.SingleExpression;
 import es.uam.eps.expressions.types.interfaces.Expression;
-import es.uam.eps.expressions.types.operations.MULList;
 
 public class MULListTest {
-	private MULList<Expression> mulList = new MULList<>();
+	private final MULList<Expression> mulList = new MULList<>();
 
 	@Before
 	public void setup() {
@@ -36,7 +35,7 @@ public class MULListTest {
 
 	@Test
 	public void complexSymbolicExpressionTest() {
-		final MULList<Expression> innerList = new MULList<Expression>();
+		final MULList<Expression> innerList = new MULList<>();
 		innerList.add(new SingleExpression("f"));
 		innerList.add(new SingleExpression("g"));
 

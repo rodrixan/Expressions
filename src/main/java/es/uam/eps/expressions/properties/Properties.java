@@ -25,6 +25,7 @@ public final class Properties {
 	public static final String DISTRIBUTIVE = "distributive";
 	public static final String COMMON_FACTOR = "common factor";
 	public static final String NEUTRAL_ELEMENT = "neutral element";
+	public static final String INVERSE = "inverse";
 
 	private static final List<String> acceptedProperties = new ArrayList<String>();
 
@@ -310,14 +311,14 @@ public final class Properties {
 
 	/**
 	 * Converts a single element expression list into a SingleExpression.
-	 * 
+	 *
 	 * @param exp
 	 *            expression list to convert, MUST HAVE EXACTLY ONE ELEMENT. If
 	 *            the single element is not a single expression, function will
 	 *            fail
 	 * @return single expression associated with the expression.
 	 */
-	public static SingleExpression convertSingleListToSingleExpression(ExpressionList<Expression> exp) {
+	public static SingleExpression convertSingleExpressionListToSingleExpression(ExpressionList<Expression> exp) {
 		if (exp.size() != 1) {
 			throw new IllegalArgumentException("Expression \"" + exp.symbolicExpression()
 					+ "\" can't be converted to single expression. Must have excatly one element.");
@@ -325,7 +326,28 @@ public final class Properties {
 
 		checkElementType(exp.get(0), SingleExpression.class);
 
-		return (SingleExpression) exp.get(0);// checked before
+		return getSingleExpression(exp.get(0));// checked before
+
+	}
+
+	/**
+	 * Converts a single element expression list into the inner expression list.
+	 *
+	 * @param exp
+	 *            expression list to convert, MUST HAVE EXACTLY ONE ELEMENT. If
+	 *            the single element is not a single expression, function will
+	 *            fail
+	 * @return single expression associated with the expression.
+	 */
+	public static ExpressionList<Expression> convertSingleExpressionListToExpression(ExpressionList<Expression> exp) {
+		if (exp.size() != 1) {
+			throw new IllegalArgumentException("Expression \"" + exp.symbolicExpression()
+					+ "\" can't be converted to single expression. Must have excatly one element.");
+		}
+
+		checkElementType(exp.get(0), ExpressionList.class);
+
+		return getExpressionList(exp.get(0));// checked before
 
 	}
 
@@ -412,6 +434,17 @@ public final class Properties {
 	private static ExpressionList<Expression> getExpressionList(Expression e) {
 		checkExpressionList(e);
 		return (ExpressionList<Expression>) e;
+	}
+
+	/**
+	 *
+	 * @param e
+	 *            element to get as SingleExpression
+	 * @return SingleExpression of the element
+	 */
+	private static SingleExpression getSingleExpression(Expression e) {
+		checkElementType(e, SingleExpression.class);
+		return (SingleExpression) e;
 	}
 
 	/**

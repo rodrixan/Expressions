@@ -19,11 +19,12 @@ import es.uam.eps.expressions.types.interfaces.Operator;
 public class MULList<E extends Expression> extends ExpressionList<Expression> {
 
 	public MULList() {
-		super(Operator.MUL, new SingleExpression("1"));
+		super(Operator.MUL, null, new SingleExpression("1"));
 		loadProperties();
 	}
 
-	private void loadProperties() {
+	@Override
+	protected void loadProperties() {
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
 		validProperties.add(Properties.DISTRIBUTIVE);

@@ -354,8 +354,8 @@ public class PropertiesTest {
 		sumList.add(new SingleExpression("g"));
 
 		try {
-			final ExpressionList<Expression> commonFactorList = Properties.commonFactor(sumList, new SingleExpression("a"),
-					new int[] { 1, 3, 4 });
+			final ExpressionList<Expression> commonFactorList = Properties.commonFactor(sumList,
+					new SingleExpression("a"), new int[] { 1, 3, 4 });
 			assertEquals("+[i, *[a, +[b, *[c, d], +[e, f]]], h, g]", commonFactorList.toString());
 		} catch (final IllegalPropertyException e) {
 			fail("ERROR: Shouldn't throw IllegalPropertyException");
@@ -376,6 +376,35 @@ public class PropertiesTest {
 		} catch (final Exception e) {
 			fail("ERROR: Shouldn't throw Exception");
 		}
+	}
+
+	@Test
+	public void testConvertToSingleExpression() {
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
+
+		mulList.add(new SingleExpression("a"));
+		mulList.add(new SingleExpression("1"));
+
+		try {
+			final ExpressionList<Expression> neutralElementRemovedList = Properties.removeNeutralElement(mulList, 1);
+			assertEquals("*[a]", neutralElementRemovedList.toString());
+			assertEquals(new SingleExpression("a"),
+					Properties.convertSingleExpressionListToSingleExpression(neutralElementRemovedList));
+		} catch (final Exception e) {
+			fail("ERROR: Shouldn't throw Exception");
+		}
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConvertToSingleExpressionFailsWhenMoreThanOneElement() {
+		final ExpressionList<Expression> mulList = new MULList<Expression>();
+
+		mulList.add(new SingleExpression("a"));
+		mulList.add(new SingleExpression("1"));
+
+		Properties.convertSingleExpressionListToSingleExpression(mulList);
+		fail("Shouldn't reach this point");
+
 	}
 
 }

@@ -18,17 +18,17 @@ import es.uam.eps.expressions.types.interfaces.Operator;
  */
 public abstract class ExpressionList<E extends Expression> extends ArrayList<Expression> implements Expression {
 
-	/** Type of the list */
-	private final Operator operator;
+	private final Operator operator, inverseOperator;
 
 	private final SingleExpression neutralElement;
 
 	/** Names of the accepted properties */
 	protected final List<String> validProperties;
 
-	protected ExpressionList(Operator operator, SingleExpression neutralElement) {
+	protected ExpressionList(Operator operator, Operator inverseOperator, SingleExpression neutralElement) {
 		super();
 		this.operator = operator;
+		this.inverseOperator = inverseOperator;
 		validProperties = new ArrayList<>();
 		this.neutralElement = neutralElement;
 	}
@@ -41,6 +41,10 @@ public abstract class ExpressionList<E extends Expression> extends ArrayList<Exp
 
 	public Operator getOperator() {
 		return operator;
+	}
+
+	public Operator getInverseOperator() {
+		return inverseOperator;
 	}
 
 	@Override
@@ -85,4 +89,9 @@ public abstract class ExpressionList<E extends Expression> extends ArrayList<Exp
 	public SingleExpression getNeutralElement() {
 		return neutralElement;
 	}
+
+	/**
+	 * load the properties of the operation
+	 */
+	protected abstract void loadProperties();
 }

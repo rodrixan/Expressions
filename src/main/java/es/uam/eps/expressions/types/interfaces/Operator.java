@@ -7,7 +7,7 @@ package es.uam.eps.expressions.types.interfaces;
  *
  */
 public enum Operator {
-	SUM("+"), MUL("*");
+	SUM("+"), MUL("*"), NEG("-");
 
 	private final String value;
 
@@ -19,4 +19,5 @@ public enum Operator {
 	public String toString() {
 		return value;
 	}
+
 }

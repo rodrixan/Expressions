@@ -19,16 +19,18 @@ import es.uam.eps.expressions.types.interfaces.Operator;
 public class SUMList<E extends Expression> extends ExpressionList<Expression> {
 
 	public SUMList() {
-		super(Operator.SUM, new SingleExpression("0"));
+		super(Operator.SUM, Operator.NEG, new SingleExpression("0"));
 		loadProperties();
 
 	}
 
-	private void loadProperties() {
+	@Override
+	protected void loadProperties() {
 		validProperties.add(Properties.ASSOCIATIVE);
 		validProperties.add(Properties.CONMUTATIVE);
 		validProperties.add(Properties.COMMON_FACTOR);
 		validProperties.add(Properties.NEUTRAL_ELEMENT);
+		validProperties.add(Properties.INVERSE);
 	}
 
 	@Override
